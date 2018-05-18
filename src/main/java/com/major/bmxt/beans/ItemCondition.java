@@ -8,6 +8,8 @@ public class ItemCondition {
 
     private Integer gender;
 
+
+
     public String getStartTime() {
         return startTime;
     }
