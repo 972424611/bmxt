@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>signUp</title>
+    <link rel="stylesheet" href="../static/plugin/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/comment/reset.css">
+    <link rel="stylesheet" href="../static/css/signUp/signUp.css">
+    <link rel="stylesheet" href="../static/css/athlete/accordion.css">
+</head>
+<body>
+    <div class="my-container">
+        <header class="header">
+            <div class="header-wrap">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="#">Logo</a>
+                        </div>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="http://39.108.5.210/bmxt/user/logout">
+                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                    登出
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <section class="section">
+            <div class="section-wrap">
+                <div class="section-left">
+                    <div class="list-title">CCA赛事报名</div>
+                    <div class="list"><!--二级菜单-->
+                        <ul>
+                            <li id="ggg">
+                                <p class="title">人员管理</p>
+                                <ul class='list-se'>
+                                    <p class="title">人员管理</p>
+                                    <li onclick="toAthlete()"><p>运动员</p></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="title">赛事管理</p>
+                                <ul class='list-se'>
+                                    <p class="title">赛事管理</p>
+                                    <li onclick="toSignUp()"><p>赛事日历</p></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="section-right">
+                    <ol class="breadcrumb">
+                        <li><a href="#">CCA赛事报名</a></li>
+                        <li><a href="#">赛事管理</a></li>
+                        <li class="active">赛事日历</li>
+                    </ol>
+                    <form action="http://39.108.5.210/bmxt/upload/file" method="post" enctype="multipart/form-data" id="myform3" target="iframe3">
+                        <!--<input type="text" class="pic-name" readonly="readonly" value="您还未选择任何文件">-->
+                        <a href="#" class="search-file">
+                            赛事导入
+                            <input type="file" name="fileUpload2" class="file-upload" id="file-upload3">
+                        </a>
+                    </form>
+                    <iframe id="frame3" name="iframe3" style="display:none;"></iframe>
+                    <div class="table-container">
+                        <table class="table table-bordered table-hover table-striped" id="match-info">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>赛事名称</th>
+                                    <th>大项</th>
+                                    <th>举办地</th>
+                                    <th>开始日期</th>
+                                    <th>结束日期</th>
+                                    <th>报名状态</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer class="footer">
+            <div class="footer-wrap"></div>
+        </footer>
+    </div>
+    <script type="text/javascript" src="../static/plugin/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../static/plugin/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../static/plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../static/js/athlete/accordion.js"></script>
+    <script type="text/javascript" src="../static/js/comment/comment.js"></script>
+    <script type="text/javascript" src="../static/js/signUp/signUp.js"></script>
+</body>
+</html>

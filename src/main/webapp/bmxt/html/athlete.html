@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>运动员</title>
+    <link rel="stylesheet" href="../static/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../static/plugin/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/comment/reset.css">
+    <link rel="stylesheet" href="../static/css/athlete/athlete.css">
+    <link rel="stylesheet" href="../static/css/athlete/accordion.css">
+</head>
+<body>
+    <div class="modal fade" id="myModal-change" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-dialog-add" role="document">
+            <div class="modal-content modal-content-add">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">修改运动员信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="change-athlete-form">
+                        <div class="modal-left">
+                            <form action="http://39.108.5.210/bmxt/picture/upload" method="post" enctype="multipart/form-data" id="myform2" target="iframe2">
+                                <div class="pic-container"></div>
+                                <input type="text" class="pic-name" readonly="readonly" value="您还未选择任何文件">
+                                <a href="#" class="search-file">
+                                    浏览
+                                    <input type="file" name="fileUpload2" class="file-upload" id="file-upload2">
+                                </a>
+                            </form>
+                            <iframe id="frame2" name="iframe2" style="display:none;"></iframe>
+                        </div>
+                        <div class="modal-right">
+                            <div class="add-input-container">
+                                <label for="modal-athlete-name">姓名：</label>
+                                <input type="text" id="change-athlete-name">
+                            </div>
+                            <div class="add-input-container">
+                                <label for="modal-teamname">代表队：</label>
+                                <input type="text" id="change-teamname" readonly="readonly">
+                            </div>
+                            <div class="add-input-container">
+                                <label for="modal-sex">性别：</label>
+                                <select name="modal-sex" id="change-sex">
+                                    <option value="">请选择</option>
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                </select>
+                            </div>
+                            <div class=" add-input-container">
+                                <label for="modal-birthday">出生日期：</label>
+                                <input type="text" id="change-birthday">
+                            </div>
+                            <div class="add-checkbox-container">
+                                <div>
+                                    <span>大项：</span>
+                                    <input type="checkbox" name="canoeFlatwater" class="change-checkbox">
+                                    <label for="canoeFlatwater">皮划艇静水</label>
+                                    <input type="checkbox" name="canoeTorrent" class="change-checkbox">
+                                    <label for="canoeTorrent">皮划艇激流</label>
+                                    <input type="checkbox" name="kayak" class="change-checkbox">
+                                    <label for="kayak">赛艇</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary save-change" id="save-change">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-dialog-add" role="document">
+            <div class="modal-content modal-content-add">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加运动员</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="add-athlete-form">
+                        <div class="modal-left">
+                            <form action="http://39.108.5.210/bmxt/picture/upload" method="post" enctype="multipart/form-data" id="myform" target="iframe">
+                                <div class="pic-container"></div>
+                                <input type="text" class="pic-name" readonly="readonly" value="您还未选择任何文件">
+                                <a href="#" class="search-file">
+                                    浏览
+                                    <input type="file" name="fileUpload" class="file-upload" id="file-upload">
+                                </a>
+                            </form>
+                            <iframe id="frame" name="iframe" style="display:none;"></iframe>
+                        </div>
+                        <div class="modal-right">
+                            <div class="add-input-container">
+                                <label for="modal-athlete-name">姓名：</label>
+                                <input type="text" id="modal-athlete-name">
+                            </div>
+                            <div class="add-input-container">
+                                <label for="modal-teamname">代表队：</label>
+                                <input type="text" id="modal-teamname" readonly="readonly">
+                            </div>
+                            <div class="add-input-container">
+                                <label for="modal-sex">性别：</label>
+                                <select name="modal-sex" id="modal-sex">
+                                    <option value="notchoose">请选择</option>
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                </select>
+                            </div>
+                            <div class=" add-input-container">
+                                <label for="modal-birthday">出生日期：</label>
+                                <input type="text" id="modal-birthday">
+                            </div>
+                            <div class="add-checkbox-container">
+                                <div><span>大项：</span>
+                                <input type="checkbox" id="canoeFlatwater" class="add-checkbox">
+                                <label for="canoeFlatwater">皮划艇静水</label>
+                                <input type="checkbox" id="canoeTorrent" class="add-checkbox">
+                                <label for="canoeTorrent">皮划艇激流</label>
+                                <input type="checkbox" id="kayak" class="add-checkbox">
+                                <label for="kayak">赛艇</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary add-athlete">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="my-container">
+        <header class="header">
+            <div class="header-wrap">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="#">Logo</a>
+                        </div>
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="http://39.108.5.210/bmxt/user/logout">
+                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                    登出
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <section class="section">
+            <div class="section-wrap">
+                <div class="section-left">
+                    <div class="list-title">CCA赛事报名</div>
+                    <div class="list"><!--二级菜单-->
+                        <ul>
+                            <li>
+                                <p class="title">人员管理</p>
+                                <ul class='list-se'>
+                                    <p class="title">人员管理</p>
+                                    <li onclick="toAthlete()"><p>运动员</p></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <p class="title">赛事管理</p>
+                                <ul class='list-se'>
+                                    <p class="title">赛事管理</p>
+                                    <li onclick="toSignUp()"><p>赛事日历</p></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="section-right">
+                    <ol class="breadcrumb">
+                        <li><a href="#">CCA赛事报名</a></li>
+                        <li><a href="#">人员管理</a></li>
+                        <li class="active">运动员</li>
+                    </ol>
+                    <div class="tool-bar">
+                        <a href="">运动员查询</a>
+                    </div>
+                    <div class="search-container">
+                        <div class="input-container">
+                            <label for="athlete-name">姓名：</label>
+                            <input type="text" id="athlete-name">
+                        </div>
+                        <div class="input-container">
+                        <label for="sex">性别：</label>
+                            <select name="sex" id="sex">
+                                <option value="">请选择</option>
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                        </div>
+                        <div class="input-container">
+                            <label for="birthday">出生日期：</label>
+                            <input type="text" id="birthday">
+                        </div>
+                        <div class="input-container">
+                            <label for="classname">大项：</label>
+                            <select name="classname" id="classname">
+                                <option value="">请选择</option>
+                                <option value="赛艇">赛艇</option>
+                                <option value="皮划艇静水">皮划艇静水</option>
+                                <option value="皮划艇激流">皮划艇激流</option>
+                            </select>
+                        </div>
+                        <div class="input-container">
+                            <label for="teamname">代表队：</label>
+                            <input type="text" id="teamname">
+                        </div>
+                        <div class="input-container">
+                            <button type="submit" class="btn btn-info" id="search">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                查询
+                            </button>
+                            <button type="reset" class="btn btn-info" id="search-clean">
+                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                重置
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table table-striped athletes-info">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>姓名</th>
+                                    <th>性别</th>
+                                    <th>出生日期</th>
+                                    <th>大项</th>
+                                    <th>代表队</th>
+                                    <th>操作
+                                        <a href="#" data-toggle="modal" data-target="#myModal" id="add-one">添加运动员</a>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body"></tbody>
+                        </table>
+                        <div class="pageNation" id="pageNation"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer class="footer">
+            <div class="footer-wrap"></div>
+        </footer>
+    </div>
+    <script type="text/javascript" src="../static/plugin/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../static/plugin/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../static/plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../static/js/athlete/accordion.js"></script>
+    <script type="text/javascript" src="../static/plugin/layui/layui.js"></script>
+    <script type="text/javascript" src="../static/js/comment/comment.js"></script>
+    <script type="text/javascript" src="../static/js/athlete/athlete.js"></script>
+</body>
+</html>

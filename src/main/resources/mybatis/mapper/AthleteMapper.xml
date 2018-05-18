@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.major.bmxt.mapper.AthleteMapper">
+
+	<insert id="insertAthlete">
+		INSERT INTO tb_athlete (name, team, gender, event, birthday, number, photo_name, create_time, update_time)
+		VALUES (#{name}, #{team}, #{gender}, #{event}, #{birthday}, #{number}, #{photoName}, #{createTime}, #{updateTime})
+	</insert>
+
+	<select id="selectAthletes" resultType="com.major.bmxt.model.TbAthlete">
+		SELECT * FROM tb_athlete WHERE team = #{team} ORDER BY id LIMIT #{pageQuery.offset}, #{pageQuery.pageSize}
+	</select>
+
+	<select id="countAthleteByTeam" resultType="Integer">
+		SELECT COUNT(id) FROM tb_athlete WHERE team = #{team}
+	</select>
+
+	<update id="updateAthleteById">
+		UPDATE tb_athlete SET name = #{name}, gender = #{gender},
+		event = #{event}, birthday = #{birthday}, photo_name = #{photoName},
+		update_time = #{updateTime} WHERE id = #{id}
+	</update>
+
+	<select id="selectAthleteById" resultType="com.major.bmxt.model.TbAthlete">
+		SELECT * FROM tb_athlete WHERE id = #{id}
+	</select>
+
+	<select id="countAthleteByCondition" resultType="Integer">
+		SELECT COUNT(id) FROM tb_athlete WHERE team = #{team}
+		<if test="name != null and name != ''">
+			AND name = #{name}
+		</if>
+		<if test="gender != null and gender != ''">
+			AND gender = #{gender}
+		</if>
+		<if test="birthday != null and birthday != ''">
+			AND birthday = #{birthday}
+		</if>
+		<if test="event != null and event != ''">
+			AND event LIKE #{event}
+		</if>
+	</select>
+
+	<select id="selectAthletesByCondition" resultType="com.major.bmxt.model.TbAthlete">
+		SELECT * FROM tb_athlete WHERE team = #{team}
+		<if test="name != null and name != ''">
+			AND name = #{name}
+		</if>
+		<if test="gender != null and gender != ''">
+			AND gender = #{gender}
+		</if>
+		<if test="birthday != null and birthday != ''">
+			AND birthday = #{birthday}
+		</if>
+		<if test="event != null and event != ''">
+			AND event LIKE #{event}
+		</if>
+		ORDER BY id LIMIT #{offset}, #{pageSize}
+	</select>
+
+	<select id="selectAthletesByTeamAndEvent" resultType="com.major.bmxt.model.TbAthlete">
+		SELECT * FROM tb_athlete WHERE team = #{team} AND event LIKE #{event}
+	</select>
+
+	<delete id="deleteByAthleteId">
+		DELETE FROM tb_athlete WHERE id = #{athleteId}
+	</delete>
+
+    <select id="countMatchItemAthleteByAthleteNumber" resultType="Integer">
+        SELECT count(*) FROM tb_match_item_athlete WHERE athlete_message LIKE #{number}
+    </select>
+
+	<select id="selectAthleteMaxIdByTeam" resultType="Integer">
+		SELECT MAX(id) FROM tb_athlete WHERE team = #{team}
+	</select>
+</mapper>

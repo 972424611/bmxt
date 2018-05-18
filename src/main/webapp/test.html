@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<form action="http://localhost:8080/picture/upload" method="post" enctype="multipart/form-data" name="upload_form" id="myform">
+    <label>选择图片文件</label>
+    <input name="imgfile" type="file" class="file-upload"/>
+</form>
+<script type="text/javascript" src="./bmxt/static/plugin/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript">
+        $('.file-upload').on('change',function(){
+            document.getElementById("myform").submit();
+        });
+</script>
+<div>
+    <img src="file:///home/twilight/work/bmxtImage/BEIJING/GEHVUkee.jpg">
+</div>
+
+<form action="http://localhost:8080/upload/picture" method="post" enctype="multipart/form-data" name="upload_form">
+    <label>选择文件</label>
+    <input name="imgfile" type="file"/>
+    <input name="upload" type="submit" value="上传" />
+</form>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.major.bmxt.mapper.ItemMapper">
+
+    <select id="selectItemsByMatchId" resultType="com.major.bmxt.model.TbItem">
+        SELECT * FROM tb_item WHERE match_id = #{matchId}
+    </select>
+
+    <select id="getItemById" resultType="com.major.bmxt.model.TbItem">
+        SELECT * FROM tb_item WHERE id = #{itemId}
+    </select>
+
+    <insert id="insertItemAthlete">
+        INSERT INTO tb_match_item_athlete (match_id, item_id, athlete_message, boat_id)
+        VALUES (#{matchId}, #{itemId}, #{athleteMessage}, #{boatId})
+    </insert>
+
+    <select id="countRegisteredNumber" resultType="Integer">
+        SELECT count(*) FROM tb_match_item_athlete WHERE item_id = #{itemId}
+    </select>
+
+    <select id="selectItemById" resultType="com.major.bmxt.model.TbItem">
+        SELECT * FROM tb_item WHERE id = #{itemId}
+    </select>
+
+    <select id="selectItemAthleteByItemId" resultType="com.major.bmxt.model.TbMatchItemAthlete">
+        SELECT * FROM tb_match_item_athlete WHERE item_id = #{itemId}
+    </select>
+    
+    <delete id="deleteItemAthleteByItemId">
+        DELETE FROM tb_match_item_athlete WHERE item_id = #{id}
+    </delete>
+
+    <select id="selectItemByName" resultType="com.major.bmxt.model.TbItem">
+        SELECT * FROM tb_item WHERE name = #{name}
+    </select>
+
+    <update id="updateItemById">
+        UPDATE tb_item
+        SET name = #{tbItem.name}, number = #{tbItem.number}, conditions = #{tbItem.conditions},
+        event = #{tbItem.event}, match_id = #{tbItem.matchId}, create_time = #{tbItem.createTime}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insertItem">
+        INSERT INTO tb_item (name, number, conditions, event, match_id, create_time)
+        VALUES (#{name}, #{number}, #{conditions}, #{event}, #{matchId}, #{createTime})
+    </insert>
+
+    <delete id="deleteItemByMatchId">
+        DELETE FROM tb_item WHERE match_id = #{id}
+    </delete>
+
+    <delete id="deleteMatchItemAthleteByMatchId">
+        DELETE FROM tb_match_item_athlete WHERE match_id = #{id}
+    </delete>
+</mapper>
