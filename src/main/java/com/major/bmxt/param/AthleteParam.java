@@ -10,6 +10,7 @@ public class AthleteParam {
     @NotBlank(message = "运动员名称不能为空")
     private String name;
 
+    @NotBlank(message = "代表队不能为空")
     private String team;
 
     @NotBlank(message = "性别不能为空")

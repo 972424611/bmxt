@@ -3,6 +3,7 @@ package com.major.bmxt.service;
 import com.major.bmxt.param.UserParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public interface UserService {
 

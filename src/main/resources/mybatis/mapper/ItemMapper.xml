@@ -13,24 +13,33 @@
     </select>
 
     <insert id="insertItemAthlete">
-        INSERT INTO tb_match_item_athlete (match_id, item_id, athlete_message, boat_id)
-        VALUES (#{matchId}, #{itemId}, #{athleteMessage}, #{boatId})
+        INSERT INTO tb_match_item_athlete (match_id, item_id, athlete_message, boat_id, team)
+        VALUES (#{matchId}, #{itemId}, #{athleteMessage}, #{boatId}, #{team})
     </insert>
 
     <select id="countRegisteredNumber" resultType="Integer">
         SELECT count(*) FROM tb_match_item_athlete WHERE item_id = #{itemId}
+        <if test="team != null and team != ''">
+            AND team = #{team}
+        </if>
     </select>
 
     <select id="selectItemById" resultType="com.major.bmxt.model.TbItem">
         SELECT * FROM tb_item WHERE id = #{itemId}
     </select>
 
-    <select id="selectItemAthleteByItemId" resultType="com.major.bmxt.model.TbMatchItemAthlete">
+    <select id="selectItemAthleteByItemIdAndTeam" resultType="com.major.bmxt.model.TbMatchItemAthlete">
         SELECT * FROM tb_match_item_athlete WHERE item_id = #{itemId}
+        <if test="team != null and team != ''">
+            AND team = #{team}
+        </if>
     </select>
     
-    <delete id="deleteItemAthleteByItemId">
+    <delete id="deleteMatchItemAthleteByItemId">
         DELETE FROM tb_match_item_athlete WHERE item_id = #{id}
+        <if test="team != null and team != ''">
+            AND team = #{team}
+        </if>
     </delete>
 
     <select id="selectItemByName" resultType="com.major.bmxt.model.TbItem">

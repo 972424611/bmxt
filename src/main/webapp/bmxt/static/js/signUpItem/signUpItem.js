@@ -2,13 +2,13 @@ var itemArr = [];
 var athleteArr = [];
 var $boat = $('.boat');
 var $modal_body = $('.modal-body');
-var doMainName = 'http://localhost:8080/bmxt';//在这里填上url的主体部分
+var doMainName = $.cookie('doMainName');//在这里填上url的主体部分
+
+var index = [];
 
 $(function () {
-    var team = $.cookie('team');
-    if(team === 'CCA') {
-        document.getElementById('ggg').style.display = 'none';
-    }
+    $('#logout').attr("href", doMainName + "/user/logout");
+    $('#team_name').html('<span class="glyphicon glyphicon-user" aria-hidden="true"></span>\n' + $.cookie('team'));
 });
 
 $(function () {
@@ -34,6 +34,8 @@ $(function () {
 
 function constructTable(result) {
     for(var i = 0; i < result.length; i++){
+        index[i] = result[i].id;
+        result[i].id = i + 1;
         var data = result[i];
         var limitNumber = data.number;
         var startTime = data.itemCondition.startTime;
@@ -50,17 +52,27 @@ function constructTr(data) {
     var itemId = data.id;
     var itemName = data.name;
     var registeredNumber = data.registeredNumber;
-    $('#table-body').append('<tr>\constructTr(data);n' +
-        '                            <td>' + itemId + '</td>'+
-        '                            <td>' + itemName + '</td>\n' +
-        '                            <td>' + registeredNumber + '</td>\n' +
-        '                            <td>\n' +
-        '                                <a href="####" data-toggle="modal" data-target="#myModal" class="item-edit">\n' +
-        '                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>\n' +
-        '                                    编辑信息\n' +
-        '                                </a>\n' +
-        '                            </td>\n' +
-        '                        </tr>');
+    if($.cookie('flag') !== 'false') {
+        $('#table-body').append('<tr>\constructTr(data);n' +
+            '                            <td>' + itemId + '</td>'+
+            '                            <td>' + itemName + '</td>\n' +
+            '                            <td>' + registeredNumber + '</td>\n' +
+            '                            <td>\n' +
+            '                                <a href="####" data-toggle="modal" data-target="#myModal" class="item-edit">\n' +
+            '                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>\n' +
+            '                                    编辑报名信息\n' +
+            '                                </a>\n' +
+            '                            </td>\n' +
+            '                        </tr>');
+    } else {
+        $('#table-body').append('<tr>\constructTr(data);n' +
+            '                            <td>' + itemId + '</td>'+
+            '                            <td>' + itemName + '</td>\n' +
+            '                            <td>' + registeredNumber + '</td>\n' +
+            '                            <td>\n' + '报名已截止' + '</td>\n' +
+            '                        </tr>');
+    }
+
 }
 
 function editItemListener(data) {//监听编辑信息点击事件
@@ -76,7 +88,7 @@ function editItemListener(data) {//监听编辑信息点击事件
         var rowData = data[rowIndex];
         number = rowData.number;
         name = rowData.name;
-        id = rowData.id;
+        id = index[rowData.id - 1];
         registeredNumber = rowData.registeredNumber;
         itemCondition = rowData.itemCondition;
         itemDto = {
@@ -90,15 +102,15 @@ function editItemListener(data) {//监听编辑信息点击事件
         var startTime;
         var endTime;
         var warningTitle;
-        if(itemCondition.startTime != null) {
+        if(itemCondition.startTime !== null) {
             startTime = toChineseDate(itemCondition.startTime);
             warningTitle = '仅限' + startTime + '后出生的运动员参加';
         }
-        if(itemCondition.endTime != null) {
+        if(itemCondition.endTime !== null) {
             endTime = toChineseDate(itemCondition.endTime);
             warningTitle = '仅限' + endTime + '前出生的运动员参加';
         }
-        if(itemCondition.startTime != null && itemCondition.endTime != null) {
+        if(itemCondition.startTime !== null && itemCondition.endTime !== null) {
             warningTitle = '仅限' + startTime + '至' + endTime + '期间出生的运动员参加';
         }
         $('.modal-title').html(modalTitle);
@@ -118,7 +130,7 @@ function editItemListener(data) {//监听编辑信息点击事件
         $('.athlete-input').each(function (index) {
             if($(this).val() !== '请选择') {
                 athleteMessageArr.push($(this).val());
-                if($(this).prev().html().indexOf("quitEdit") != -1) {
+                if($(this).prev().html().indexOf("quitEdit") !== -1) {
                     boatArr.push($(this).prev().html().substring(1, $(this).prev().html().indexOf("<")));
                     id = $(this).prev().html().substring(1, $(this).prev().html().indexOf("<"));
                 } else {
@@ -142,8 +154,12 @@ function editItemListener(data) {//监听编辑信息点击事件
             url : doMainName + '/item/saveAthlete',
             dataType : 'json',
             data : {athleteList : JSON.stringify(athleteList), itemVo : JSON.stringify(itemDto)},
-            success : function () {
-                alert('保存成功！');
+            success : function (data) {
+                if(data.ret === false) {
+                    alert(data.msg);
+                } else {
+                    alert('保存成功！');
+                }
                 window.location.reload();
             },
             error : function (jqXHR) {
@@ -171,9 +187,10 @@ function loadItemAthlete(list) {
 function constructSelect(num,list) { //根据项目限制人数添加select选项框
     var select = '';
     for(var i = 0; i < num; i++){
-        select = select + '<select class="athlete-input">'+
+        select = select + '<' + ++i + '>' + '<select class="athlete-input">'+
                                 loadItemAthlete(list) +
-                            '</select> ';
+                            '</select> <br>';
+        i--;
     }
     return select;
 }
@@ -204,7 +221,12 @@ function loadSignUped(id,num,list) {//小项目中获取已经报名的运动员
         dataType : 'json',
         data : {id : id},
         success : function (data) {
+            if(data.ret === false) {
+                alert(data.data);
+                return;
+            }
             var result = data.data;
+            console.log(data.data);
             if(result.length > 0) {
                 var boatNum = result[result.length - 1].boatId;
                 for(var i = 0;i < boatNum; i++){
@@ -216,7 +238,7 @@ function loadSignUped(id,num,list) {//小项目中获取已经报名的运动员
             }
         },
         error : function (jqXHR) {
-            console.log(jqXHR);
+            alert(jqXHR.data);
         }
     })
 }
@@ -241,7 +263,7 @@ function loadListItem(id) {
             result = data.data;
         },
         error : function (jqXHR) {
-            console.log('error : ',jqXHR);
+            alert(jqXHR.data);
         }
     });
     return result;

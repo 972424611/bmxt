@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>输出报名表</title>
+    <link rel="stylesheet" href="../static/plugin/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/output/output.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <nav class="header-nav">
+                <img src="../static/img/output/logo.jpg" alt="" class="nav-logo">
+                <h1 id="matchName">2018年皮划艇夏季冠军赛</h1>
+                <h3 id="time">2018-05-25</h3>
+            </nav>
+        </header>
+        <section class="section">
+            <table class="output-table">
+                <thead>
+                    <tr>
+                        <th>项目名称</th>
+                        <th>代表队</th>
+                        <th>姓名</th>
+                        <th>艇桨号</th>
+                    </tr>
+                </thead>
+                <tbody id="output-table-body"></tbody>
+            </table>
+            <div id="bottomInfo">
+                <span id="itemTotal"></span>
+                <span id="boatTotal"></span>
+                <span id="athleteTotal"></span>
+            </div>
+        </section>
+        <footer class="footer"></footer>
+    </div>
+    <script type="text/javascript" src="../static/plugin/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../static/plugin/jquery/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../static/plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../static/js/output/output.js"></script>
+</body>
+</html>

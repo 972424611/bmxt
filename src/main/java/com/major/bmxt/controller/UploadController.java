@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = "/upload")
@@ -30,14 +31,14 @@ public class UploadController {
 
     @ResponseBody
     @RequestMapping(value = "/get")
-    public String get(@RequestParam("photoName") String photoName) {
-        return uploadService.getPictureAddress(photoName);
+    public String get(@RequestParam("team") String team,  @RequestParam("photoName") String photoName) {
+        return uploadService.getPictureAddress(team, photoName);
     }
 
     @ResponseBody
     @RequestMapping(value = "/file")
-    public ResultData fileUpload(HttpServletRequest request) {
-        uploadService.uploadFile(request);
+    public ResultData fileUpload(HttpServletRequest request, HttpServletResponse response) {
+        uploadService.uploadFile(request, response);
         return ResultData.success();
     }
 }

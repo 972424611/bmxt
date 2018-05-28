@@ -10,6 +10,8 @@ public class TbMatchItemAthlete {
 
     private Integer boatId;
 
+    private String team;
+
     public Integer getMatchId() {
         return matchId;
     }
@@ -42,6 +44,14 @@ public class TbMatchItemAthlete {
         this.boatId = boatId;
     }
 
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
+    }
+
     @Override
     public String toString() {
         return "TbMatchItemAthlete{" +
@@ -49,6 +59,7 @@ public class TbMatchItemAthlete {
                 ", itemId=" + itemId +
                 ", athleteMessage='" + athleteMessage + '\'' +
                 ", boatId=" + boatId +
+                ", team='" + team + '\'' +
                 '}';
     }
 }

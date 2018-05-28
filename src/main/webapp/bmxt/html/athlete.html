@@ -20,8 +20,9 @@
                 <div class="modal-body">
                     <div id="change-athlete-form">
                         <div class="modal-left">
-                            <form action="http://39.108.5.210/bmxt/picture/upload" method="post" enctype="multipart/form-data" id="myform2" target="iframe2">
-                                <div class="pic-container"></div>
+                            <form action="" method="post" enctype="multipart/form-data" id="myform2" target="iframe2">
+                                <div class="pic-container">
+                                </div>
                                 <input type="text" class="pic-name" readonly="readonly" value="您还未选择任何文件">
                                 <a href="#" class="search-file">
                                     浏览
@@ -32,34 +33,34 @@
                         </div>
                         <div class="modal-right">
                             <div class="add-input-container">
-                                <label for="modal-athlete-name">姓名：</label>
+                                <label for="change-athlete-name">姓名：</label>
                                 <input type="text" id="change-athlete-name">
                             </div>
                             <div class="add-input-container">
-                                <label for="modal-teamname">代表队：</label>
+                                <label for="change-teamname">代表队：</label>
                                 <input type="text" id="change-teamname" readonly="readonly">
                             </div>
                             <div class="add-input-container">
-                                <label for="modal-sex">性别：</label>
-                                <select name="modal-sex" id="change-sex">
+                                <label for="change-sex">性别：</label>
+                                <select name="change-sex" id="change-sex">
                                     <option value="">请选择</option>
                                     <option value="男">男</option>
                                     <option value="女">女</option>
                                 </select>
                             </div>
                             <div class=" add-input-container">
-                                <label for="modal-birthday">出生日期：</label>
+                                <label for="change-birthday">出生日期：</label>
                                 <input type="text" id="change-birthday">
                             </div>
                             <div class="add-checkbox-container">
                                 <div>
                                     <span>大项：</span>
-                                    <input type="checkbox" name="canoeFlatwater" class="change-checkbox">
-                                    <label for="canoeFlatwater">皮划艇静水</label>
-                                    <input type="checkbox" name="canoeTorrent" class="change-checkbox">
-                                    <label for="canoeTorrent">皮划艇激流</label>
-                                    <input type="checkbox" name="kayak" class="change-checkbox">
-                                    <label for="kayak">赛艇</label>
+                                    <input type="radio" class="change-checkbox" name="item2">
+                                    <label for="canoeFlatwater">皮划艇静水(皮艇)</label>
+                                    <input type="radio" class="change-checkbox" name="item2">
+                                    <label for="canoeTorrent">皮划艇静水(划艇)</label>
+                                    <input type="radio" class="change-checkbox" name="item2">
+                                    <label for="kayak">皮划艇激流</label>
                                 </div>
                             </div>
                         </div>
@@ -82,8 +83,9 @@
                 <div class="modal-body">
                     <div id="add-athlete-form">
                         <div class="modal-left">
-                            <form action="http://39.108.5.210/bmxt/picture/upload" method="post" enctype="multipart/form-data" id="myform" target="iframe">
-                                <div class="pic-container"></div>
+                            <form action="" method="post" enctype="multipart/form-data" id="myform" target="iframe">
+                                <div class="pic-container">
+                                </div>
                                 <input type="text" class="pic-name" readonly="readonly" value="您还未选择任何文件">
                                 <a href="#" class="search-file">
                                     浏览
@@ -115,12 +117,12 @@
                             </div>
                             <div class="add-checkbox-container">
                                 <div><span>大项：</span>
-                                <input type="checkbox" id="canoeFlatwater" class="add-checkbox">
-                                <label for="canoeFlatwater">皮划艇静水</label>
-                                <input type="checkbox" id="canoeTorrent" class="add-checkbox">
-                                <label for="canoeTorrent">皮划艇激流</label>
-                                <input type="checkbox" id="kayak" class="add-checkbox">
-                                <label for="kayak">赛艇</label>
+                                <input type="radio" id="canoeFlatwater" class="add-checkbox" name="item">
+                                <label for="canoeFlatwater">皮划艇静水(皮艇)</label>
+                                <input type="radio" id="canoeTorrent" class="add-checkbox" name="item">
+                                <label for="canoeTorrent">皮划艇静水(划艇)</label>
+                                <input type="radio" id="kayak" class="add-checkbox" name="item">
+                                <label for="kayak">皮划艇激流</label>
                                 </div>
                             </div>
                         </div>
@@ -143,10 +145,13 @@
                         </div>
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <ul class="nav navbar-nav navbar-right">
-                                <li><a href="http://39.108.5.210/bmxt/user/logout">
-                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                                    登出
-                                </a></li>
+                                <li>
+                                    <a href="####"  id="team_name">
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="logout" href="">登出</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -206,8 +211,8 @@
                             <label for="classname">大项：</label>
                             <select name="classname" id="classname">
                                 <option value="">请选择</option>
-                                <option value="赛艇">赛艇</option>
-                                <option value="皮划艇静水">皮划艇静水</option>
+                                <option value="皮划艇静水(皮艇)">皮划艇静水(皮艇)</option>
+                                <option value="皮划艇静水(划艇)">皮划艇静水(划艇)</option>
                                 <option value="皮划艇激流">皮划艇激流</option>
                             </select>
                         </div>

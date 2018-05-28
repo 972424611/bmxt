@@ -15,4 +15,8 @@
 	<select id="selectUserByUsername" resultType="com.major.bmxt.model.TbUser">
 		SELECT * FROM tb_user WHERE username = #{username}
 	</select>
+
+	<select id="selectUserNameByProvince" resultType="String">
+		SELECT username FROM tb_user WHERE province = #{province}
+	</select>
 </mapper>

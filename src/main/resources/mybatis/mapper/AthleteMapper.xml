@@ -10,17 +10,31 @@
 	</insert>
 
 	<select id="selectAthletes" resultType="com.major.bmxt.model.TbAthlete">
-		SELECT * FROM tb_athlete WHERE team = #{team} ORDER BY id LIMIT #{pageQuery.offset}, #{pageQuery.pageSize}
+		SELECT * FROM tb_athlete
+		<if test="team != null and team != ''">
+			WHERE team = #{team}
+		</if>
+		ORDER BY id LIMIT #{pageQuery.offset}, #{pageQuery.pageSize}
 	</select>
 
 	<select id="countAthleteByTeam" resultType="Integer">
-		SELECT COUNT(id) FROM tb_athlete WHERE team = #{team}
+		SELECT COUNT(id) FROM tb_athlete
+	  	<if test="team != null and team != ''">
+			WHERE team = #{team}
+		</if>
 	</select>
 
 	<update id="updateAthleteById">
-		UPDATE tb_athlete SET name = #{name}, gender = #{gender},
-		event = #{event}, birthday = #{birthday}, photo_name = #{photoName},
-		update_time = #{updateTime} WHERE id = #{id}
+		UPDATE tb_athlete
+		<set>
+			<if test="name != null and name != ''">name = #{name},</if>
+			<if test="gender != null">gender = #{gender},</if>
+			<if test="event != null and event != ''">event = #{event},</if>
+			<if test="birthday != null and birthday != ''">birthday = #{birthday},</if>
+			<if test="photoName != null and photoName != ''">photo_name = #{photoName},</if>
+			<if test="updateTime != null">update_time = #{updateTime}</if>
+		</set>
+		WHERE id = #{id}
 	</update>
 
 	<select id="selectAthleteById" resultType="com.major.bmxt.model.TbAthlete">
@@ -28,40 +42,55 @@
 	</select>
 
 	<select id="countAthleteByCondition" resultType="Integer">
-		SELECT COUNT(id) FROM tb_athlete WHERE team = #{team}
-		<if test="name != null and name != ''">
-			AND name = #{name}
-		</if>
-		<if test="gender != null and gender != ''">
-			AND gender = #{gender}
-		</if>
-		<if test="birthday != null and birthday != ''">
-			AND birthday = #{birthday}
-		</if>
-		<if test="event != null and event != ''">
-			AND event LIKE #{event}
-		</if>
+		SELECT COUNT(id) FROM tb_athlete
+		<where>
+			<if test="team != null and team != ''">
+				team = #{team}
+			</if>
+			<if test="name != null and name != ''">
+				AND name = #{name}
+			</if>
+			<if test="gender != null and gender != ''">
+				AND gender = #{gender}
+			</if>
+			<if test="birthday != null and birthday != ''">
+				AND birthday = #{birthday}
+			</if>
+			<if test="event != null and event != ''">
+				AND event LIKE #{event}
+			</if>
+		</where>
+
 	</select>
 
 	<select id="selectAthletesByCondition" resultType="com.major.bmxt.model.TbAthlete">
-		SELECT * FROM tb_athlete WHERE team = #{team}
-		<if test="name != null and name != ''">
-			AND name = #{name}
-		</if>
-		<if test="gender != null and gender != ''">
-			AND gender = #{gender}
-		</if>
-		<if test="birthday != null and birthday != ''">
-			AND birthday = #{birthday}
-		</if>
-		<if test="event != null and event != ''">
-			AND event LIKE #{event}
-		</if>
+		SELECT * FROM tb_athlete
+		<where>
+			<if test="team != null and team != ''">
+				team = #{team}
+			</if>
+			<if test="name != null and name != ''">
+				AND name = #{name}
+			</if>
+			<if test="gender != null and gender != ''">
+				AND gender = #{gender}
+			</if>
+			<if test="birthday != null and birthday != ''">
+				AND birthday = #{birthday}
+			</if>
+			<if test="event != null and event != ''">
+				AND event LIKE #{event}
+			</if>
+		</where>
 		ORDER BY id LIMIT #{offset}, #{pageSize}
 	</select>
 
 	<select id="selectAthletesByTeamAndEvent" resultType="com.major.bmxt.model.TbAthlete">
-		SELECT * FROM tb_athlete WHERE team = #{team} AND event LIKE #{event}
+		SELECT * FROM tb_athlete WHERE
+		<if test="team != null and team != ''">
+			team = #{team} AND
+		</if>
+		event LIKE #{event}
 	</select>
 
 	<delete id="deleteByAthleteId">
@@ -69,10 +98,22 @@
 	</delete>
 
     <select id="countMatchItemAthleteByAthleteNumber" resultType="Integer">
-        SELECT count(*) FROM tb_match_item_athlete WHERE athlete_message LIKE #{number}
+        SELECT COUNT(*) FROM tb_match_item_athlete WHERE athlete_message LIKE #{number}
     </select>
 
 	<select id="selectAthleteMaxIdByTeam" resultType="Integer">
 		SELECT MAX(id) FROM tb_athlete WHERE team = #{team}
+	</select>
+
+	<select id="selectAllAthlete" resultType="com.major.bmxt.model.TbAthlete">
+	    SELECT * FROM tb_athlete
+	</select>
+
+	<select id="countAllAthlete" resultType="Integer">
+		SELECT COUNT(id) FROM tb_athlete
+	</select>
+
+	<select id="selectMatchItemAthleteByAthleteNumber" resultType="com.major.bmxt.model.TbMatchItemAthlete">
+		SELECT * FROM tb_match_item_athlete WHERE athlete_message LIKE #{number}
 	</select>
 </mapper>

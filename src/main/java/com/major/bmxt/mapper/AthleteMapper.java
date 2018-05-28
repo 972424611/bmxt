@@ -15,7 +15,7 @@ public interface AthleteMapper {
 
     List<TbAthlete> selectAthletes(@Param("pageQuery") PageQuery pageQuery, @Param("team") String team);
 
-    int countAthleteByTeam(String team);
+    int countAthleteByTeam(@Param("team") String team);
 
     void updateAthleteById(TbAthlete athlete);
 
@@ -32,4 +32,10 @@ public interface AthleteMapper {
     Integer countMatchItemAthleteByAthleteNumber(String number);
 
     int selectAthleteMaxIdByTeam(String team);
+
+    List<TbAthlete> selectAllAthlete();
+
+    int countAllAthlete();
+
+    List<TbMatchItemAthlete> selectMatchItemAthleteByAthleteNumber(String number);
 }

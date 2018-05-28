@@ -13,13 +13,13 @@ public interface ItemMapper {
 
     void insertItemAthlete(TbMatchItemAthlete matchItemAthlete);
 
-    int countRegisteredNumber(int itemId);
+    int countRegisteredNumber(@Param("itemId") int itemId, @Param("team") String team);
 
     TbItem selectItemById(Integer itemId);
 
-    List<TbMatchItemAthlete> selectItemAthleteByItemId(Integer itemId);
+    List<TbMatchItemAthlete> selectItemAthleteByItemIdAndTeam(@Param("itemId") Integer itemId, @Param("team") String team);
 
-    void deleteItemAthleteByItemId(int id);
+    void deleteMatchItemAthleteByItemId(@Param("id") int id, @Param("team") String team);
 
     TbItem selectItemByName(String name);
 

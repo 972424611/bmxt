@@ -2,12 +2,15 @@ package com.major.bmxt.service.impl;
 
 import com.google.common.collect.Sets;
 import com.major.bmxt.beans.ItemCondition;
+import com.major.bmxt.common.CookieSessionManage;
 import com.major.bmxt.common.RequestHolder;
 import com.major.bmxt.exception.UploadException;
+import com.major.bmxt.mapper.MatchMapper;
 import com.major.bmxt.param.UploadFileParam;
 import com.major.bmxt.service.ItemService;
 import com.major.bmxt.service.MatchService;
 import com.major.bmxt.service.UploadService;
+import com.major.bmxt.utils.PropertyUtil;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -21,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,6 +40,14 @@ public class UploadServiceImpl implements UploadService {
 
     private static Set<String> pictureFormatSet = Sets.newHashSet();
 
+    private static String team;
+
+    private HttpServletRequest request;
+
+    private HttpServletResponse response;
+
+    private final MatchMapper matchMapper;
+
     private final ItemService itemService;
 
     private final MatchService matchService;
@@ -46,12 +58,14 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Autowired
-    public UploadServiceImpl(ItemService itemService, MatchService matchService) {
+    public UploadServiceImpl(ItemService itemService, MatchService matchService,
+                             MatchMapper matchMapper) {
         this.itemService = itemService;
         this.matchService = matchService;
+        this.matchMapper = matchMapper;
     }
 
-    private String getFormat(FileItem item) {
+    private String getFormatAndTeam(FileItem item) {
         long size = item.getSize();
         //设定上传的最大值5MB, 5*1024*1024
         if(size > MAXSIZE) {
@@ -62,11 +76,27 @@ public class UploadServiceImpl implements UploadService {
         if(!pictureFormatSet.contains(format)) {
             throw new UploadException("请使用格式为.jpg或.png的图片");
         }
+        String username = RequestHolder.getCurrentUser().getUsername();
+        if("CCA".equals(username) || "admin".equals(username)) {
+            team = fileName.substring(0, fileName.lastIndexOf("."));
+            if(!team.contains("-")) {
+                throw new UploadException("图片名格式不正确, 请使用姓名-代表队, 例如: 小明-北京");
+            }
+            team = team.split("-")[1];
+            if(PropertyUtil.getTeamProperty(team) == null) {
+                throw new UploadException("图片名中代表队名称不正确");
+            }
+            team = PropertyUtil.getTeamProperty(team);
+        } else {
+            team = null;
+        }
         return format;
     }
 
     private File createFile(String photoName, String format) {
-        String team = RequestHolder.getCurrentUser().getUsername();
+        if(team == null) {
+            team = RequestHolder.getCurrentUser().getUsername();
+        }
         String fileName = pictureAddress + team + "/" + photoName + format;
         File file = new File(fileName);
         if(!file.getParentFile().exists()) {
@@ -98,7 +128,7 @@ public class UploadServiceImpl implements UploadService {
             List<FileItem> list = upload.parseRequest(request);
             for(FileItem item : list) {
                 if(!item.isFormField()) {
-                    String format = getFormat(item);
+                    String format = getFormatAndTeam(item);
                     inputStream = item.getInputStream();
                     byte[] buffer = new byte[1024];
                     File file = createFile(request.getParameter("id"), format);
@@ -127,14 +157,13 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public String getPictureAddress(String photoName) {
-        String team = RequestHolder.getCurrentUser().getUsername();
-        String fileName = pictureAddress + team + "/" + photoName;
-        File file = new File(fileName);
+    public String getPictureAddress(String team, String photoName) {
+        String address = pictureAddress + team + "/" + photoName;
+        File file = new File(address);
         if(!file.exists()) {
             return null;
         }
-        return fileName;
+        return address;
     }
 
     private void saveData(UploadFileParam uploadFileParam) {
@@ -197,7 +226,9 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public void uploadFile(HttpServletRequest request) {
+    public void uploadFile(HttpServletRequest request, HttpServletResponse response) {
+        this.request = request;
+        this.response = response;
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setHeaderEncoding("UTF-8");

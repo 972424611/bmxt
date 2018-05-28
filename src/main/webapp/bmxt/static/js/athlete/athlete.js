@@ -16,8 +16,26 @@ var $modal_sex = $('#modal-sex');
 var $modal_birthday = $('#modal-birthday');
 
 var fileRandomName = '';
-var doMainName = 'http://39.108.5.210/bmxt';
+var doMainName = $.cookie('doMainName');
 var totalNum;
+
+var index = [];
+
+var team = ["安徽", "北京", "重庆", "福建", "甘肃", "广东", "广西", "贵州", "海南", "河北", "黑龙江",
+            "河南", "香港", "湖北", "湖南", "内蒙古自治区", "江苏", "江西", "吉林", "辽宁", "澳门", "宁夏", "青海",
+            "陕西", "山东", "上海", "山西", "四川", "台湾", "天津", "西藏", "新疆", "云南", "浙江"];
+
+$(function () {
+    $('#logout').attr("href", doMainName + "/user/logout");
+    $('#team_name').html('<span class="glyphicon glyphicon-user" aria-hidden="true"></span>\n' + $.cookie('team'));
+    if($.cookie('team') === 'CCA' || $.cookie('team') === 'admin') {
+        document.getElementById("modal-teamname").removeAttribute("readonly");
+        document.getElementById("change-teamname").removeAttribute("readonly");
+    } else {
+        $('#teamname').val($.cookie('team'));
+        $('#teamname').attr('readonly', 'readonly');
+    }
+});
 
 /**运动员查询部分开始*/
 $(function () {
@@ -30,7 +48,7 @@ $(function () {
         var laydate = layui.laydate;
         laydate.render({
             elem : '#birthday',
-            lang : 'cn'
+            lang : 'cn',
         });
     });
     loadTable('/athlete/list',1,10);
@@ -67,32 +85,33 @@ $(function () {
 
             },
             error : function (jqXHR) {
-                alert('未找到符号条件的运动员');
+                alert(jqXHR.data);
             }
         })
+        layui.use('laypage', function(){
+            var laypage = layui.laypage;
+            laypage.render({
+                elem: 'pageNation'
+                ,count: totalNum
+                ,limit : 10
+                ,curr : pageNo
+                ,jump : function (obj,first) {
+                    if(!first){
+                        loadTable('/athlete/listCondition',obj.curr,obj.limit);
+                    }
+                }
+            });
+        });
     }
 
-    layui.use('laypage', function(){
-        var laypage = layui.laypage;
-        laypage.render({
-            elem: 'pageNation'
-            ,count: totalNum
-            ,limit : 10
-            ,curr : 1
-            ,jump : function (obj,first) {
-                if(!first){
-                    loadTable('/athlete/list',obj.curr,obj.limit);
-                }
-            }
-        });
-    });
+
 });
-
-
 
 function constructTable(result) {
     $('#table-body').html('');
     for(var i = 0; i < result.data.length; i++){
+        index[i] = result.data[i].id;
+        result.data[i].id = i + 1;
         var tmp = result.data[i];
         constructTr(tmp);
     }
@@ -122,19 +141,23 @@ function tableButtonListener(dataArr) {//监听两个按钮的触发事件
             infoArr.push($(this).html());
         });
         trIndex = $(this).parent().parent().index();
-        id = infoArr[0];
+        id = index[infoArr[0] - 1];
         var name = infoArr[1];
         var sex = infoArr[2];
         var birthday = infoArr[3];
         var item = infoArr[4].split('-');
         var teamName = infoArr[5];
         var photoUrl = dataArr.data[trIndex].photoUrl;
-        $pic_container.html('<img src="' + photoUrl + '">');
+        if(photoUrl !== null && photoUrl !== '') {
+            $pic_container.html('<img src="' + photoUrl + '">');
+        } else {
+            $pic_container.html('<img src="../static/img/comment/noPic.png">');
+        }
         $change_item.each(function () {
-            $(this).attr('checked',false);
+            $(this).prop('checked',false);
             for(var i = 0; i < item.length; i++){
                 if($(this).next().html() === item[i]) {
-                    $(this).attr('checked','checked');
+                    $(this).prop('checked','checked');
                 }
             }
         });
@@ -157,7 +180,7 @@ function tableButtonListener(dataArr) {//监听两个按钮的触发事件
     /*运动员删除开始*/
     $('.delete').on('click',function () {
         var conf = confirm('确认删除该信息？');
-        var oId = $(this).parent().parent().children().eq(0).html();
+        var oId = index[$(this).parent().parent().children().eq(0).html() - 1];
         if(conf) {
             deleteOtr(oId);
         }
@@ -170,34 +193,38 @@ function deleteOtr(id) {//向后台发送ajax请求，删除一行信息并且�
     $.ajax({
         type : 'post',
         dataType : 'json',
-        url : '/athlete/delete',
+        url : doMainName + '/athlete/delete',
         data : {id : id},
         success : function (data) {
-            alert('删除成功');
-            window.location.reload();
+            if(data.ret === false) {
+                alert(data.msg);
+            } else {
+                alert('删除成功');
+                window.location.reload();
+            }
         },
         error : function (jqXHR) {
-            console.log('error : ',jqXHR);
+            alert(jqXHR.data);
         }
     })
 }
 function changeAthlete(trIndex, id) {//点击保存时修改运动员信息并刷新该运动员的信息
     var $tmp = $('#table-body').children('tr').eq(trIndex).children('td');
-    $tmp.eq(1).html($change_athlete_name.val());
+    /*$tmp.eq(1).html($change_athlete_name.val());
     $tmp.eq(2).html($change_sex.val());
     $tmp.eq(3).html($change_birthday.val());
-    $tmp.eq(5).html($change_teamame.val());
+    $tmp.eq(5).html($change_teamame.val());*/
     var tmpArr = [];
     var itemNames = '';
     $change_item.each(function () {
-        if(this.checked){
+        if(this.checked) {
             tmpArr.push($(this).next().html());
         }
     });
     if(tmpArr.length === 1){
         itemNames = tmpArr[0];
     } else {
-        for(var i = 0; i < tmpArr.length; i++){
+        for(var i = 0; i < tmpArr.length; i++) {
             if(i === tmpArr.length - 1){
                 itemNames += tmpArr[i];
             } else {
@@ -205,19 +232,22 @@ function changeAthlete(trIndex, id) {//点击保存时修改运动员信息并�
             }
         }
     }
-    $tmp.eq(4).html(itemNames);
+    //$tmp.eq(4).html(itemNames);
     $.ajax({
         type : 'post',
         dataType : 'json',
         url : doMainName + '/athlete/update',
         data : {id : id, name : $change_athlete_name.val(), team : $change_teamame.val(), gender : $change_sex.val(), birthday : $change_birthday.val(), event : itemNames, photoName: fileRandomName},
         success : function (data) {
-            alert('修改运动员成功');
+            if(data.ret === false) {
+                alert(data.msg);
+            } else {
+                alert('修改运动员成功');
+            }
             window.location.reload();
         },
         error : function (jqXHR) {
-            console.log(jqXHR);
-            alert('修改运动员失败，请重试！')
+            alert(jqXHR.data);
         }
     });
 }
@@ -279,6 +309,27 @@ function fileUpload(obj) {
     var fileSize = files.size;
     var fileName = files.name;
     var index = fileName.indexOf('.');
+    if($.cookie('team') === 'CCA' || $.cookie('team') === 'admin') {
+        if(fileName.indexOf('-') === -1) {
+            alert("图片名格式不正确, 请使用例如: 小明-北京");
+            return -1;
+        }
+        var name = fileName.substring(0, index);
+        if(name.split('-').length > 3) {
+            alert("图片格式不正确, 请使用例如: 小明-北京");
+            return -1;
+        }
+        var t = name.split("-")[1];
+        for(var s in team) {
+            if(team[s] === t) {
+                break;
+            }
+        }
+        if(team[s] !== t) {
+            alert("图片名中代表队名称不正常.");
+            return -1;
+        }
+    }
     var fileNameSuffix = fileName.substring(index);//存放文件后缀
     if(fileNameSuffix === '.jpg' || fileNameSuffix === '.png'){
         var size = fileSize / 1024 / 1024;
@@ -291,7 +342,6 @@ function fileUpload(obj) {
             fileReader.readAsDataURL(files);
             fileReader.onloadend = function (ev) {
                 var src = ev.target.result;
-                $pic_container.val('');
                 $pic_container.html('<img src="' + src + '">');
             };
             return true;
@@ -335,12 +385,15 @@ $('.add-athlete').on('click',function () {
         url : doMainName + '/athlete/save',
         data : {name : addAthleteName, team : addTeamname, gender : addSex, birthday : addBirthday, event : itemNames, photoName: fileRandomName},
         success : function (data) {
-            alert('添加运动员成功');
-            window.location.reload();
+            if(data.ret === false) {
+                alert(data.msg);
+            } else {
+                alert('添加运动员成功');
+                window.location.reload();
+            }
         },
         error : function (jqXHR) {
-            console.log(jqXHR);
-            alert('添加运动员失败，请重试！')
+            alert(jqXHR.data);
         }
     })
 });
@@ -349,17 +402,21 @@ $('#add-one').on('click',function () {
         var laydate = layui.laydate;
         laydate.render({
             elem : '#modal-birthday',
-            lang : 'cn'
+            lang : 'cn',
+            value : '2000-01-01',
+            isInitValue : true
         });
     });
-    $modal_teamname.val($.cookie('team'));
+    if($.cookie('team') === 'CCA' || $.cookie('team') === 'admin') {
+        $modal_teamname.val('');
+    } else {
+        $modal_teamname.val($.cookie('team'));
+    }
     $add_item.val('');
     $modal_athlete_name.val('');
     $modal_sex.val('');
-    $modal_birthday.val('');
+    $modal_birthday.val('2000-01-01');
     $('.file-upload').val('');
-    $('.pic-container').html('');
+    $('.pic-container').html('<img src="../static/img/comment/noPic.png" alt="">');
     $('.add-checkbox').val('');
 });
-
-

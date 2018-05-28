@@ -14,22 +14,34 @@
 
 	<update id="updateMatchById">
 		UPDATE tb_match
-		SET name = #{tbMatch.name}, event = #{tbMatch.event},
+		SET name = #{tbMatch.name}, event = #{tbMatch.event}, host = #{tbMatch.host},
 		start_time = #{tbMatch.startTime}, end_time = #{tbMatch.endTime},
 		status = #{tbMatch.status}, create_time = #{tbMatch.createTime}
 		WHERE id = #{id}
 	</update>
 
 	<insert id="insertMatch">
-		INSERT INTO tb_match (name, event, start_time, end_time, status, create_time)
-		VALUES (#{name}, #{event}, #{startTime}, #{endTime}, #{status}, #{createTime})
+		INSERT INTO tb_match (name, event, host, start_time, end_time, status, create_time)
+		VALUES (#{name}, #{event}, #{host}, #{startTime}, #{endTime}, #{status}, #{createTime})
 	</insert>
 
-	<select id="selectMatchById">
+	<select id="selectMatchById" resultType="com.major.bmxt.model.TbMatch">
 		SELECT * FROM tb_match WHERE id = #{id}
 	</select>
 
 	<update id="changeMatchStatus">
 		UPDATE tb_match SET status = #{status} WHERE id = #{id}
 	</update>
+
+	<delete id="deleteMatchById">
+		DELETE FROM tb_match WHERE  id = #{id}
+	</delete>
+
+	<select id="countMatchByName" resultType="Integer">
+		SELECT COUNT(id) FROM tb_match WHERE name = #{name}
+	</select>
+
+	<select id="selectMatchItemAthleteByMatchId" resultType="com.major.bmxt.model.TbMatchItemAthlete">
+		SELECT * FROM tb_match_item_athlete WHERE match_id = #{id}
+	</select>
 </mapper>

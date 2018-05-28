@@ -5,8 +5,8 @@
     <title>signUp</title>
     <link rel="stylesheet" href="../static/plugin/bootstrap-3.3.7-dist/css/bootstrap.css">
     <link rel="stylesheet" href="../static/css/comment/reset.css">
-    <link rel="stylesheet" href="../static/css/signUp/signUp.css">
     <link rel="stylesheet" href="../static/css/athlete/accordion.css">
+    <link rel="stylesheet" href="../static/css/signUp/signUp.css">
 </head>
 <body>
     <div class="my-container">
@@ -19,10 +19,14 @@
                         </div>
                         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                             <ul class="nav navbar-nav navbar-right">
-                                <li><a href="http://39.108.5.210/bmxt/user/logout">
-                                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                                    登出
-                                </a></li>
+                                <li>
+                                    <a href="####"  id="team_name">
+                                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="logout" href="">登出</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -35,7 +39,7 @@
                     <div class="list-title">CCA赛事报名</div>
                     <div class="list"><!--二级菜单-->
                         <ul>
-                            <li id="ggg">
+                            <li>
                                 <p class="title">人员管理</p>
                                 <ul class='list-se'>
                                     <p class="title">人员管理</p>
@@ -58,7 +62,7 @@
                         <li><a href="#">赛事管理</a></li>
                         <li class="active">赛事日历</li>
                     </ol>
-                    <form action="http://39.108.5.210/bmxt/upload/file" method="post" enctype="multipart/form-data" id="myform3" target="iframe3">
+                    <form action="" method="post" enctype="multipart/form-data" id="myform3" target="iframe3">
                         <!--<input type="text" class="pic-name" readonly="readonly" value="您还未选择任何文件">-->
                         <a href="#" class="search-file">
                             赛事导入
@@ -76,7 +80,8 @@
                                     <th>举办地</th>
                                     <th>开始日期</th>
                                     <th>结束日期</th>
-                                    <th>报名状态</th>
+                                    <th id="status">报名状态</th>
+                                    <th id="change">更改报名状态</th>
                                 </tr>
                             </thead>
                             <tbody id="table-body"></tbody>
@@ -86,9 +91,11 @@
             </div>
         </section>
         <footer class="footer">
-            <div class="footer-wrap"></div>
+            <div class="footer-wrap">
+            </div>
         </footer>
     </div>
+    <script type="text/javascript" src="../static/plugin/xlsx/xlsx.full.min.js"></script>
     <script type="text/javascript" src="../static/plugin/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="../static/plugin/jquery/jquery.cookie.js"></script>
     <script type="text/javascript" src="../static/plugin/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>

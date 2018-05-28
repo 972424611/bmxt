@@ -43,6 +43,15 @@ public class CookieSessionManage {
         return null;
     }
 
+    public static void clearCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie(COOKIE_NAME, null);
+        //设置为0为立即删除该Cookie
+        cookie.setMaxAge(0);
+        //删除指定路径的cookie,不设置该路径，默认为删除当前路径Cookie
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
     public static void clearCookieAndSession(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         if(session != null) {

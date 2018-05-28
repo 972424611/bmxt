@@ -57,6 +57,8 @@
           <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml-schemas:3.17" />
           <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:2.6.0" />
           <element id="library" level="project" name="Maven: stax:stax-api:1.0.1" />
+          <element id="library" level="project" name="Maven: com.itextpdf:itextpdf:5.5.10" />
+          <element id="library" level="project" name="Maven: com.itextpdf:itext-asian:5.2.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">

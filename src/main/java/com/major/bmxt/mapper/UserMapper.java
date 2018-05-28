@@ -9,4 +9,6 @@ public interface UserMapper {
     TbUser selectUserByAdmAndPw(TbUser user);
 
     TbUser selectUserByUsername(String username);
+
+    String selectUserNameByProvince(String province);
 }

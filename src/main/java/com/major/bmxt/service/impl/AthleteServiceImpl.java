@@ -7,13 +7,14 @@ import com.major.bmxt.beans.PageQueryCondition;
 import com.major.bmxt.beans.PageResult;
 import com.major.bmxt.common.BeanValidator;
 import com.major.bmxt.common.RequestHolder;
+import com.major.bmxt.mapper.MatchMapper;
+import com.major.bmxt.mapper.UserMapper;
+import com.major.bmxt.model.*;
+import com.major.bmxt.utils.PropertyUtil;
 import com.major.bmxt.vo.AthleteVo;
 import com.major.bmxt.exception.AthleteException;
 import com.major.bmxt.mapper.AthleteMapper;
 import com.major.bmxt.mapper.ItemMapper;
-import com.major.bmxt.model.TbAthlete;
-import com.major.bmxt.model.TbItem;
-import com.major.bmxt.model.TbUser;
 import com.major.bmxt.param.AthleteParam;
 import com.major.bmxt.service.AthleteService;
 import com.major.bmxt.service.UploadService;
@@ -34,23 +35,35 @@ public class AthleteServiceImpl implements AthleteService {
     @Value("${PHOTO_URL}")
     private String photoUrl;
 
+    private final UserMapper userMapper;
+
     private final UploadService uploadService;
 
     private final AthleteMapper athleteMapper;
 
     private final ItemMapper itemMapper;
 
+    private final MatchMapper matchMapper;
+
     @Autowired
     public AthleteServiceImpl(AthleteMapper athleteMapper, UploadService uploadService,
-                              ItemMapper itemMapper) {
+                              ItemMapper itemMapper, UserMapper userMapper, MatchMapper matchMapper) {
         this.athleteMapper = athleteMapper;
         this.uploadService = uploadService;
         this.itemMapper = itemMapper;
+        this.userMapper = userMapper;
+        this.matchMapper = matchMapper;
     }
 
     @Override
     public void saveAthlete(AthleteParam athleteParam) {
         BeanValidator.check(athleteParam);
+        if(PropertyUtil.getTeamProperty(athleteParam.getTeam()) == null) {
+            throw new AthleteException("代表队错误");
+        }
+        if(StringUtils.isBlank(athleteParam.getPhotoName())) {
+            athleteParam.setPhotoName(null);
+        }
         TbAthlete athlete = new TbAthlete();
         BeanUtils.copyProperties(athleteParam, athlete, "gender");
         String gender = athleteParam.getGender();
@@ -76,7 +89,6 @@ public class AthleteServiceImpl implements AthleteService {
         } else {
             pageQueryCondition.setEvent("%" + pageQueryCondition.getEvent() + "%");
         }
-        pageQueryCondition.setTeam(RequestHolder.getCurrentUser().getProvince());
         int count = athleteMapper.countAthleteByCondition(pageQueryCondition);
         if(count < 1) {
             return new PageResult<>();
@@ -86,12 +98,14 @@ public class AthleteServiceImpl implements AthleteService {
         for(TbAthlete athlete : athleteList) {
             AthleteVo athleteVo = new AthleteVo();
             BeanUtils.copyProperties(athlete, athleteVo, "gender");
-            String photoUrl = uploadService.getPictureAddress(athlete.getPhotoName());
+            String team = PropertyUtil.getTeamProperty(athlete.getTeam());
+            String photoUrl = uploadService.getPictureAddress(team, athlete.getPhotoName());
             athleteVo.setGender(athlete.getGender() == 1 ? "男" : "女");
             if(photoUrl != null) {
                 //photoUrl = "file://" + photoUrl;
-                String username = RequestHolder.getCurrentUser().getUsername();
-                photoUrl = this.photoUrl + username + "/" + athlete.getPhotoName();
+                //String username = RequestHolder.getCurrentUser().getUsername();
+                //username = userMapper.selectUserNameByProvince(athlete.getTeam());
+                photoUrl = this.photoUrl + team + "/" + athlete.getPhotoName();
                 athleteVo.setPhotoUrl(photoUrl);
             }
             athleteVoList.add(athleteVo);
@@ -110,6 +124,10 @@ public class AthleteServiceImpl implements AthleteService {
         if(team == null) {
             throw new AthleteException("请先登录");
         }
+        String username = RequestHolder.getCurrentUser().getUsername();
+        if("CCA".equals(username) || "admin".equals(username)) {
+            team = null;
+        }
         String itemStr = '%' + item.getEvent() + '%';
         List<TbAthlete> athleteList = athleteMapper.selectAthletesByTeamAndEvent(team, itemStr);
         List<String> athleteStrList = Lists.newLinkedList();
@@ -125,12 +143,12 @@ public class AthleteServiceImpl implements AthleteService {
             String startTime = itemCondition.getStartTime();
             String endTime = itemCondition.getEndTime();
             Integer gender = itemCondition.getGender();
-
-            if(startTime != null && endTime != null) {
-                String date = tbAthlete.getBirthday();
-                if(!(date.compareTo(startTime) > 0 && date.compareTo(endTime) < 0)) {
-                    flag = false;
-                }
+            String date = tbAthlete.getBirthday();
+            if(startTime != null && date.compareTo(startTime) < 0) {
+                flag = false;
+            }
+            if(endTime != null && date.compareTo(endTime) > 0) {
+                flag = false;
             }
             if(gender != null) {
                 if(gender.intValue() != tbAthlete.getGender().intValue()) {
@@ -138,7 +156,7 @@ public class AthleteServiceImpl implements AthleteService {
                 }
             }
             if(flag) {
-                String str = tbAthlete.getName();
+                String str = tbAthlete.getName() + "-" + tbAthlete.getTeam();
                 athleteStrList.add(str);
             }
         }
@@ -155,10 +173,15 @@ public class AthleteServiceImpl implements AthleteService {
         if(athlete == null) {
             throw new AthleteException("未能找到该运动员");
         }
-        String number = "%"+ athlete.getNumber() +"%";
-        Integer count = athleteMapper.countMatchItemAthleteByAthleteNumber(number);
-        if(count > 0) {
-            throw new AthleteException("改运动员已经报名参赛，请先删除该运动员的比赛项目");
+        String number = "%"+ athlete.getName() + "-" + athlete.getTeam() +"%";
+        List<TbMatchItemAthlete> list = athleteMapper.selectMatchItemAthleteByAthleteNumber(number);
+        if(list.size() > 0) {
+            for(TbMatchItemAthlete matchItemAthlete : list) {
+                TbMatch tbMatch = matchMapper.selectMatchById(matchItemAthlete.getMatchId());
+                if(tbMatch.getStatus() == 1) {
+                    throw new AthleteException("该运动员已经报名[" + tbMatch.getName() + "]比赛，请先删除该运动员的比赛项目");
+                }
+            }
         }
         athleteMapper.deleteByAthleteId(id);
     }
@@ -167,7 +190,12 @@ public class AthleteServiceImpl implements AthleteService {
     public PageResult<AthleteVo> getAthletes(PageQuery pageQuery) {
         BeanValidator.check(pageQuery);
         TbUser user = RequestHolder.getCurrentUser();
-        String team = user.getProvince();
+        String team;
+        if("admin".equals(user.getUsername()) || "CCA".equals(user.getUsername())) {
+            team = null;
+        } else {
+            team = user.getProvince();
+        }
         int count = athleteMapper.countAthleteByTeam(team);
         if(count < 1) {
             return new PageResult<>();
@@ -178,11 +206,11 @@ public class AthleteServiceImpl implements AthleteService {
             AthleteVo athleteVo = new AthleteVo();
             BeanUtils.copyProperties(athlete, athleteVo, "gender");
             athleteVo.setGender(athlete.getGender() == 1 ? "男" : "女");
-            String photoUrl = uploadService.getPictureAddress(athlete.getPhotoName());
+            team = PropertyUtil.getTeamProperty(athlete.getTeam());
+            String photoUrl = uploadService.getPictureAddress(team, athlete.getPhotoName());
             if(photoUrl != null) {
                 //photoUrl = "file://" + photoUrl;
-                String username = RequestHolder.getCurrentUser().getUsername();
-                photoUrl = this.photoUrl + username + "/" + athlete.getPhotoName();
+                photoUrl = this.photoUrl + team + "/" + athlete.getPhotoName();
                 athleteVo.setPhotoUrl(photoUrl);
             }
             athleteVoList.add(athleteVo);
@@ -196,11 +224,28 @@ public class AthleteServiceImpl implements AthleteService {
     @Override
     public void updateAthlete(AthleteParam athleteParam) {
         BeanValidator.check(athleteParam);
+        if(PropertyUtil.getTeamProperty(athleteParam.getTeam()) == null) {
+            throw new AthleteException("代表队错误");
+        }
         TbAthlete tbAthlete = athleteMapper.selectAthleteById(athleteParam.getId());
-        String number = "%"+ tbAthlete.getNumber() +"%";
-        Integer count = athleteMapper.countMatchItemAthleteByAthleteNumber(number);
-        if(count > 0) {
-            throw new AthleteException("改运动员已经报名参赛，请先删除该运动员的比赛项目");
+        boolean flag = true;
+        if(!tbAthlete.getTeam().equals(athleteParam.getTeam())
+                || !tbAthlete.getName().equals(athleteParam.getName())
+                || !tbAthlete.getBirthday().equals(athleteParam.getBirthday())
+                || !tbAthlete.getEvent().equals(athleteParam.getEvent())
+                || !tbAthlete.getGender().equals("男".equals(athleteParam.getGender()) ? 1 : 2)) {
+            flag = false;
+        }
+        String number = "%"+ tbAthlete.getName() + "-" + tbAthlete.getTeam() +"%";
+        List<TbMatchItemAthlete> list = athleteMapper.selectMatchItemAthleteByAthleteNumber(number);
+        if(list.size() > 0 && !flag) {
+            for(TbMatchItemAthlete matchItemAthlete : list) {
+                int matchId = matchItemAthlete.getMatchId();
+                TbMatch tbMatch = matchMapper.selectMatchById(matchId);
+                if(tbMatch.getStatus() == 1) {
+                    throw new AthleteException("该运动员已经报名[" + tbMatch.getName() + "]比赛，请先删除该运动员的比赛项目");
+                }
+            }
         }
         TbAthlete athlete = new TbAthlete();
         BeanUtils.copyProperties(athleteParam, athlete, "gender");
@@ -209,5 +254,4 @@ public class AthleteServiceImpl implements AthleteService {
         athlete.setUpdateTime(new Date());
         athleteMapper.updateAthleteById(athlete);
     }
-
 }

@@ -3,6 +3,7 @@
 //import com.major.bmxt.mapper.UserMapper;
 //import com.major.bmxt.model.TbUser;
 //import com.major.bmxt.service.UserService;
+//import com.major.bmxt.utils.PropertyUtil;
 //import com.major.bmxt.utils.RandomPassword;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
@@ -79,7 +80,7 @@
 //            user.setProvince(entry.getValue());
 //            user.setPassword(password);
 //            user.setPassword(DigestUtils.md5DigestAsHex(password.getBytes()));
-//            userMapper.insertUser(user);
+//            //userMapper.insertUser(user);
 //            user.setPassword(password);
 //            userList.add(user);
 //        }
@@ -92,5 +93,7 @@
 //    public void test() {
 //        System.out.println("asss-ddd-tttt".substring(0, "asss-ddd-tttt".lastIndexOf("-")));
 //        System.out.println(DigestUtils.md5DigestAsHex("admin".getBytes()));
+//        //System.out.println("asdf".compareTo(null));
+//        System.out.println(PropertyUtil.getTeamProperty("北京"));
 //    }
 //}

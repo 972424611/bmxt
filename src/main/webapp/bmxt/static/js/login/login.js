@@ -24,10 +24,11 @@ window.onload = function () {
                 success : function (result) {
                     if(result.ret === true){
                         $.cookie('team',result.data);
-                        if(result.data === 'CCA') {
+                        $.cookie('doMainName', doMainName);
+                        if(result.data === 'CCA' || resule.data === 'admin') {
                             window.location = './signUp.html';
                         } else {
-                            window.location = './athlete.html';
+                            window.location = './signUp.html';
                         }
                     } else {
                         alert('账号或密码不正确！');

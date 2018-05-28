@@ -17,6 +17,7 @@ import com.major.bmxt.param.ItemAthleteParam;
 import com.major.bmxt.service.ItemService;
 import com.major.bmxt.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.omg.CORBA.Request;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,8 @@ public class ItemServiceImpl implements ItemService {
             return Lists.newArrayList();
         }
         List<ItemVo> itemVoList = Lists.newLinkedList();
+        String username = RequestHolder.getCurrentUser().getUsername();
+        String team = RequestHolder.getCurrentUser().getProvince();
         for(TbItem tbItem : itemList) {
             ItemVo itemVo = new ItemVo();
             BeanUtils.copyProperties(tbItem, itemVo);
@@ -51,7 +54,12 @@ public class ItemServiceImpl implements ItemService {
                 ItemCondition itemCondition = JsonUtils.jsonToPojo(condition, ItemCondition.class);
                 itemVo.setItemCondition(itemCondition);
             }
-            int count = itemMapper.countRegisteredNumber(itemVo.getId());
+            int count;
+            if("CCA".equals(username) || "admin".equals(username)) {
+                count = itemMapper.countRegisteredNumber(itemVo.getId(), null);
+            } else {
+                count = itemMapper.countRegisteredNumber(itemVo.getId(), team);
+            }
             count = count / itemVo.getNumber();
             itemVo.setRegisteredNumber(count);
             itemVoList.add(itemVo);
@@ -65,10 +73,15 @@ public class ItemServiceImpl implements ItemService {
         List<ItemAthleteParam.Athlete> athleteList = itemAthleteParam.getAthleteList();
         Set<ItemAthleteParam.Athlete> athleteSet = new HashSet<>(athleteList);
         if(athleteSet.size() != athleteList.size()) {
-            throw new ItemException("同一场比赛一个人只能报一个赛艇");
+            throw new ItemException("同一项比赛中选手重复报名");
+        }
+        String username = RequestHolder.getCurrentUser().getUsername();
+        String team = RequestHolder.getCurrentUser().getProvince();
+        if("CCA".equals(username) || "admin".equals(username)) {
+            team = null;
         }
         //先把以前的全部删除
-        itemMapper.deleteItemAthleteByItemId(itemVo.getId());
+        itemMapper.deleteMatchItemAthleteByItemId(itemVo.getId(), team);
         TbItem item = itemMapper.selectItemById(itemVo.getId());
         for(ItemAthleteParam.Athlete athlete : athleteList) {
             TbMatchItemAthlete matchItemAthlete = new TbMatchItemAthlete();
@@ -76,7 +89,8 @@ public class ItemServiceImpl implements ItemService {
             matchItemAthlete.setAthleteMessage(athlete.getAthleteMessage());
             matchItemAthlete.setBoatId(athlete.getBoat());
             matchItemAthlete.setItemId(itemVo.getId());
-            System.out.println(matchItemAthlete.toString());
+            team = athlete.getAthleteMessage().split("-")[1];
+            matchItemAthlete.setTeam(team);
             itemMapper.insertItemAthlete(matchItemAthlete);
         }
     }
@@ -87,15 +101,54 @@ public class ItemServiceImpl implements ItemService {
         if(item == null) {
             throw new ItemException("不存在该小项目");
         }
-        List<TbMatchItemAthlete> matchItemAthleteList = itemMapper.selectItemAthleteByItemId(itemId);
+        String username = RequestHolder.getCurrentUser().getUsername();
+        String team;
+        if("CCA".equals(username) || "admin".equals(username)) {
+            team = null;
+        } else {
+            team = RequestHolder.getCurrentUser().getProvince();
+        }
+        List<TbMatchItemAthlete> matchItemAthleteList = itemMapper.selectItemAthleteByItemIdAndTeam(itemId, team);
         List<MatchItemAthleteVo> matchItemAthleteVoList = Lists.newArrayList();
-        for(TbMatchItemAthlete matchItemAthlete : matchItemAthleteList) {
-            MatchItemAthleteVo matchItemAthleteVo = new MatchItemAthleteVo();
-            //int index = matchItemAthlete.getAthleteMessage().lastIndexOf("-");
-            //String athleteMessage = matchItemAthlete.getAthleteMessage().substring(0, index);
-            matchItemAthleteVo.setAthleteMessage(matchItemAthlete.getAthleteMessage());
-            matchItemAthleteVo.setBoatId(matchItemAthlete.getBoatId());
-            matchItemAthleteVoList.add(matchItemAthleteVo);
+        int i = 1;
+        Iterator iterator = matchItemAthleteList.iterator();
+        if("CCA".equals(username) || "admin".equals(username)) {
+            while(iterator.hasNext()) {
+                TbMatchItemAthlete matchItemAthlete = (TbMatchItemAthlete) iterator.next();
+                if(matchItemAthlete == null) {
+                    iterator.remove();
+                    continue;
+                }
+                MatchItemAthleteVo matchItemAthleteVo = new MatchItemAthleteVo();
+                matchItemAthleteVo.setAthleteMessage(matchItemAthlete.getAthleteMessage());
+                matchItemAthleteVo.setBoatId(i);
+                matchItemAthleteVoList.add(matchItemAthleteVo);
+                for(TbMatchItemAthlete tbMatchItemAthlete : matchItemAthleteList) {
+                    if(tbMatchItemAthlete == null) {
+                        break;
+                    }
+                    if(tbMatchItemAthlete.getAthleteMessage().equals(matchItemAthlete.getAthleteMessage())) {
+                        continue;
+                    }
+                    if(matchItemAthlete.getBoatId().intValue() == tbMatchItemAthlete.getBoatId().intValue()
+                            && matchItemAthlete.getTeam().equals(tbMatchItemAthlete.getTeam())) {
+                        MatchItemAthleteVo matchItemAthleteVo2 = new MatchItemAthleteVo();
+                        matchItemAthleteVo2.setAthleteMessage(tbMatchItemAthlete.getAthleteMessage());
+                        matchItemAthleteVo2.setBoatId(i);
+                        matchItemAthleteVoList.add(matchItemAthleteVo2);
+                        matchItemAthleteList.set(matchItemAthleteList.indexOf(tbMatchItemAthlete), null);
+                    }
+                }
+                iterator.remove();
+                i++;
+            }
+        } else {
+            for(TbMatchItemAthlete matchItemAthlete : matchItemAthleteList) {
+                MatchItemAthleteVo matchItemAthleteVo = new MatchItemAthleteVo();
+                matchItemAthleteVo.setAthleteMessage(matchItemAthlete.getAthleteMessage());
+                matchItemAthleteVo.setBoatId(matchItemAthlete.getBoatId());
+                matchItemAthleteVoList.add(matchItemAthleteVo);
+            }
         }
         return matchItemAthleteVoList;
     }
@@ -117,7 +170,15 @@ public class ItemServiceImpl implements ItemService {
             }
             tbItem.setConditions(JsonUtils.objectToJson(itemCondition));
             tbItem.setCreateTime(new Date());
-            tbItem.setEvent(uploadFileParam.getEvent());
+            String[] sign = item.getName().split(" ");
+            if(sign[0].contains("K")) {
+                tbItem.setEvent("皮划艇静水(皮艇)");
+            } else if(sign[0].contains("C")) {
+                tbItem.setEvent("皮划艇静水(划艇)");
+            }
+            if(item.getName().contains("跨界")) {
+                tbItem.setEvent("皮划艇静水");
+            }
             TbMatch tbMatch = matchMapper.selectMatchByName(uploadFileParam.getName());
             tbItem.setMatchId(tbMatch.getId());
             tbItem.setName(item.getName());
