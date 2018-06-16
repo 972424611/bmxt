@@ -13,6 +13,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
         String uri = httpServletRequest.getRequestURI();
         if(uri.contains("/bmxt/static") || uri.contains("login.html") || uri.contains("/user/")) {
             return true;

@@ -17,8 +17,11 @@ public class AthleteParam {
     private String gender;
 
     @NotBlank(message = "出生日期不能为空")
-    @Length(min = 5, max = 18, message = "请输入正确格式的身份证")
     private String birthday;
+
+    @NotBlank(message = "身份证不能为空")
+    @Length(min = 5, max = 18, message = "请输入正确格式的身份证")
+    private String number;
 
     @NotBlank(message = "请选择要参加的比赛")
     private String event;
@@ -79,5 +82,13 @@ public class AthleteParam {
 
     public void setPhotoName(String photoName) {
         this.photoName = photoName;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 }

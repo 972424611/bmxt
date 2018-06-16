@@ -10,8 +10,6 @@ public class HttpInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println(request.getRequestURI().toString());
-        System.out.println("sadfds");
         response.setHeader("Access-Control-Allow-Origin", "*");
         return true;
     }

@@ -52,10 +52,12 @@ function constructTr(data) {
     var itemId = data.id;
     var itemName = data.name;
     var registeredNumber = data.registeredNumber;
+    var maxBoats = data.maxBoats;
     if($.cookie('flag') !== 'false') {
         $('#table-body').append('<tr>\constructTr(data);n' +
             '                            <td>' + itemId + '</td>'+
             '                            <td>' + itemName + '</td>\n' +
+            '                            <td>' + maxBoats + '</td>\n' +
             '                            <td>' + registeredNumber + '</td>\n' +
             '                            <td>\n' +
             '                                <a href="####" data-toggle="modal" data-target="#myModal" class="item-edit">\n' +
@@ -228,7 +230,7 @@ function loadSignUped(id,num,list) {//小项目中获取已经报名的运动员
             var result = data.data;
             console.log(data.data);
             if(result.length > 0) {
-                var boatNum = result[result.length - 1].boatId;
+                var boatNum = result.length / num;
                 for(var i = 0;i < boatNum; i++){
                     addBoat(num,list);
                 }

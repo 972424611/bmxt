@@ -213,6 +213,7 @@ public class UploadServiceImpl implements UploadService {
                     UploadFileParam.Item item = new UploadFileParam().new Item();
                     item.setName(xssfSheet.getRow(i).getCell(1).toString());
                     item.setCondition(xssfSheet.getRow(i).getCell(2).toString());
+                    item.setMaxBoats(Integer.valueOf(xssfSheet.getRow(i).getCell(3).toString().split("\\.")[0]));
                     itemList.add(item);
                 }
                 uploadFileParam.setItemList(itemList);

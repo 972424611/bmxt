@@ -3,6 +3,7 @@ var $change_sex = $('#change-sex');
 var $change_birthday = $('#change-birthday');
 var $change_item = $('.change-checkbox');
 var $change_teamame = $('#change-teamname');
+//var $change_athlete_number  =$('#change-athlete-number');
 var $search = $('#search');
 var $search_clean = $('#search-clean');
 var $myModalChange = $('#myModal-change');
@@ -14,6 +15,7 @@ var $modal_athlete_name = $('#modal-athlete-name');
 var $modal_teamname = $('#modal-teamname');
 var $modal_sex = $('#modal-sex');
 var $modal_birthday = $('#modal-birthday');
+var $modal_number = $('#modal-number');
 
 var fileRandomName = '';
 var doMainName = $.cookie('doMainName');
@@ -82,12 +84,11 @@ $(function () {
                 totalNum = result.data.total;
                 constructTable(dataArray);
                 tableButtonListener(dataArray);
-
             },
             error : function (jqXHR) {
                 alert(jqXHR.data);
             }
-        })
+        });
         layui.use('laypage', function(){
             var laypage = layui.laypage;
             laypage.render({
@@ -165,6 +166,7 @@ function tableButtonListener(dataArr) {//监听两个按钮的触发事件
         $change_sex.val(sex);
         $change_birthday.val(birthday);
         $change_teamame.val(teamName);
+        //$change_athlete_number.val(n)
     });
     layui.use('laydate', function(){
         var laydate = layui.laydate;
@@ -233,11 +235,13 @@ function changeAthlete(trIndex, id) {//点击保存时修改运动员信息并�
         }
     }
     //$tmp.eq(4).html(itemNames);
+    //TODO 更新功能暂且不做更新身份证，要做的时候要把这个给替换掉
+    var number = "000000";
     $.ajax({
         type : 'post',
         dataType : 'json',
         url : doMainName + '/athlete/update',
-        data : {id : id, name : $change_athlete_name.val(), team : $change_teamame.val(), gender : $change_sex.val(), birthday : $change_birthday.val(), event : itemNames, photoName: fileRandomName},
+        data : {id : id, name : $change_athlete_name.val(), team : $change_teamame.val(), gender : $change_sex.val(), birthday : $change_birthday.val(),  number : number, event : itemNames, photoName: fileRandomName},
         success : function (data) {
             if(data.ret === false) {
                 alert(data.msg);
@@ -357,10 +361,12 @@ function fileUpload(obj) {
 
 /**添加运动员部分开始*/
 $('.add-athlete').on('click',function () {
+    confirm("请仔细检查所有信息后确认，确认之后将无法修改！");
     var addAthleteName = $modal_athlete_name.val();
     var addTeamname = $modal_teamname.val();
     var addSex = $modal_sex.val();
     var addBirthday = $modal_birthday.val();
+    var number = $modal_number.val();
     var tmpArr = [];
     var itemNames = '';
     $add_item.each(function () {
@@ -383,7 +389,7 @@ $('.add-athlete').on('click',function () {
         type : 'post',
         dataType : 'json',
         url : doMainName + '/athlete/save',
-        data : {name : addAthleteName, team : addTeamname, gender : addSex, birthday : addBirthday, event : itemNames, photoName: fileRandomName},
+        data : {name : addAthleteName, team : addTeamname, gender : addSex, birthday : addBirthday, number : number, event : itemNames, photoName: fileRandomName},
         success : function (data) {
             if(data.ret === false) {
                 alert(data.msg);

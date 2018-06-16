@@ -12,11 +12,21 @@ public class TbItem {
 
     private String conditions;
 
+    private Integer maxBoats;
+
     private String event;
 
     private Integer matchId;
 
     private Date createTime;
+
+    public Integer getMaxBoats() {
+        return maxBoats;
+    }
+
+    public void setMaxBoats(Integer maxBoats) {
+        this.maxBoats = maxBoats;
+    }
 
     public String getEvent() {
         return event;

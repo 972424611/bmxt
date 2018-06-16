@@ -35,8 +35,6 @@ public class AthleteServiceImpl implements AthleteService {
     @Value("${PHOTO_URL}")
     private String photoUrl;
 
-    private final UserMapper userMapper;
-
     private final UploadService uploadService;
 
     private final AthleteMapper athleteMapper;
@@ -47,11 +45,10 @@ public class AthleteServiceImpl implements AthleteService {
 
     @Autowired
     public AthleteServiceImpl(AthleteMapper athleteMapper, UploadService uploadService,
-                              ItemMapper itemMapper, UserMapper userMapper, MatchMapper matchMapper) {
+                              ItemMapper itemMapper, MatchMapper matchMapper) {
         this.athleteMapper = athleteMapper;
         this.uploadService = uploadService;
         this.itemMapper = itemMapper;
-        this.userMapper = userMapper;
         this.matchMapper = matchMapper;
     }
 
@@ -70,9 +67,6 @@ public class AthleteServiceImpl implements AthleteService {
         athlete.setGender("男".equals(gender) ? 1 : 2);
         athlete.setCreateTime(new Date());
         athlete.setUpdateTime(new Date());
-        TbUser tbUser = RequestHolder.getCurrentUser();
-        String unique = UUID.randomUUID().toString().substring(0, 6);
-        athlete.setNumber(tbUser.getProvince() + "-" + unique);
         athleteMapper.insertAthlete(athlete);
     }
 
@@ -252,6 +246,8 @@ public class AthleteServiceImpl implements AthleteService {
         String gender = athleteParam.getGender();
         athlete.setGender("男".equals(gender) ? 1 : 2);
         athlete.setUpdateTime(new Date());
+        //TODO 这里以后要改，加入身份证
+        athlete.setNumber(null);
         athleteMapper.updateAthleteById(athlete);
     }
 }

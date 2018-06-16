@@ -49,13 +49,13 @@
     <update id="updateItemById">
         UPDATE tb_item
         SET name = #{tbItem.name}, number = #{tbItem.number}, conditions = #{tbItem.conditions},
-        event = #{tbItem.event}, match_id = #{tbItem.matchId}, create_time = #{tbItem.createTime}
+        max_boats = #{maxBoats}, event = #{tbItem.event}, match_id = #{tbItem.matchId}, create_time = #{tbItem.createTime}
         WHERE id = #{id}
     </update>
 
     <insert id="insertItem">
-        INSERT INTO tb_item (name, number, conditions, event, match_id, create_time)
-        VALUES (#{name}, #{number}, #{conditions}, #{event}, #{matchId}, #{createTime})
+        INSERT INTO tb_item (name, number, conditions, max_boats, event, match_id, create_time)
+        VALUES (#{name}, #{number}, #{conditions}, #{maxBoats}, #{event}, #{matchId}, #{createTime})
     </insert>
 
     <delete id="deleteItemByMatchId">

@@ -7,7 +7,7 @@ var $username = $('#username');
 var $password = $('#password');
 var $warning_bar = $('.warning-bar');
 
-var doMainName = 'http://localhost:8080/bmxt';
+var doMainName = 'http://39.107.252.145/bmxt';
 
 window.onload = function () {
     $rewrite.on('click',function () {
@@ -25,7 +25,7 @@ window.onload = function () {
                     if(result.ret === true){
                         $.cookie('team',result.data);
                         $.cookie('doMainName', doMainName);
-                        if(result.data === 'CCA' || resule.data === 'admin') {
+                        if(result.data === 'CCA' || result.data === 'admin') {
                             window.location = './signUp.html';
                         } else {
                             window.location = './signUp.html';

@@ -31,6 +31,7 @@
 			<if test="gender != null">gender = #{gender},</if>
 			<if test="event != null and event != ''">event = #{event},</if>
 			<if test="birthday != null and birthday != ''">birthday = #{birthday},</if>
+			<if test="number != null and number != ''">number = #{number}</if>
 			<if test="photoName != null and photoName != ''">photo_name = #{photoName},</if>
 			<if test="updateTime != null">update_time = #{updateTime}</if>
 		</set>

@@ -10,6 +10,8 @@ public class ItemVo {
 
     private int registeredNumber;
 
+    private int maxBoats;
+
     private int number;
 
     private ItemCondition itemCondition;
@@ -54,12 +56,21 @@ public class ItemVo {
         this.registeredNumber = registeredNumber;
     }
 
+    public int getMaxBoats() {
+        return maxBoats;
+    }
+
+    public void setMaxBoats(int maxBoats) {
+        this.maxBoats = maxBoats;
+    }
+
     @Override
     public String toString() {
         return "ItemVo{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", registeredNumber=" + registeredNumber +
+                ", maxBoats=" + maxBoats +
                 ", number=" + number +
                 ", itemCondition=" + itemCondition +
                 '}';

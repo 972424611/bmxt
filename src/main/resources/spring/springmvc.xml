@@ -30,6 +30,12 @@
 	<mvc:annotation-driven/>
 
 	<mvc:interceptors>
+
+<!--		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="com.major.bmxt.interceptor.HttpInterceptor"/>
+		</mvc:interceptor>-->
+
 		<mvc:interceptor>
 			<mvc:mapping path="/**"/>
 			<bean class="com.major.bmxt.interceptor.LoginInterceptor"/>

@@ -4,7 +4,6 @@ import com.major.bmxt.beans.PageQuery;
 import com.major.bmxt.beans.PageQueryCondition;
 import com.major.bmxt.model.TbAthlete;
 import com.major.bmxt.model.TbMatchItemAthlete;
-import com.major.bmxt.param.AthleteParam;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

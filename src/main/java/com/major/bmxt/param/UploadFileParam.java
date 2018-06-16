@@ -38,6 +38,9 @@ public class UploadFileParam {
         /** 条件约束 */
         private String condition;
 
+        /** 最大艇数 */
+        private Integer maxBoats;
+
         public String getName() {
             return name;
         }
@@ -54,11 +57,20 @@ public class UploadFileParam {
             this.condition = condition;
         }
 
+        public Integer getMaxBoats() {
+            return maxBoats;
+        }
+
+        public void setMaxBoats(Integer maxBoats) {
+            this.maxBoats = maxBoats;
+        }
+
         @Override
         public String toString() {
             return "Item{" +
                     "name='" + name + '\'' +
                     ", condition='" + condition + '\'' +
+                    ", maxBoats=" + maxBoats +
                     '}';
         }
     }

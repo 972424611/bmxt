@@ -21,6 +21,9 @@ $.ajax({
         constructTable(tableData);
         constructNavInfo(result);
         constructBottomInfo(result);
+
+        window.print();
+
     },
     error: function (jqXHR) {
 

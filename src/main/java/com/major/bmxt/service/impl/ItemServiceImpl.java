@@ -183,6 +183,7 @@ public class ItemServiceImpl implements ItemService {
             tbItem.setMatchId(tbMatch.getId());
             tbItem.setName(item.getName());
             tbItem.setNumber(Integer.valueOf(item.getName().charAt(2) + ""));
+            tbItem.setMaxBoats(item.getMaxBoats());
             itemMapper.insertItem(tbItem);
         }
     }
