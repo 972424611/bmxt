@@ -10,6 +10,9 @@ import com.itextpdf.text.pdf.PdfPTable;
 
 import java.io.IOException;
 
+/**
+ * pdf文件操作类
+ */
 public class PdfDeal {
 
     private static final float[] columnWidths = {5f, 3f, 3f, 3f};

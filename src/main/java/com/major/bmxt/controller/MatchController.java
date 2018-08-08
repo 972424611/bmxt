@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * 比赛大项
+ */
 @Controller
 @RequestMapping(value = "/match")
 public class MatchController {

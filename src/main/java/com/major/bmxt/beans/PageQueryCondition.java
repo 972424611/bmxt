@@ -1,5 +1,8 @@
 package com.major.bmxt.beans;
 
+/**
+ * 带有条件的分页查询
+ */
 public class PageQueryCondition extends PageQuery {
 
     private String name;
@@ -8,8 +11,10 @@ public class PageQueryCondition extends PageQuery {
 
     private String birthday;
 
+    /** 比赛项目 */
     private String event;
 
+    /** 代表队 */
     private String team;
 
     public String getTeam() {

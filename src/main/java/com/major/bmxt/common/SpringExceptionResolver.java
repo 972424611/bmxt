@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * 统一异常处理
+ */
 public class SpringExceptionResolver implements HandlerExceptionResolver {
 
     private static final Logger logger = LoggerFactory.getLogger(SpringExceptionResolver.class);

@@ -48,6 +48,7 @@ public class MatchServiceImpl implements MatchService {
             BeanUtils.copyProperties(tbMatch, matchVo, "createTime");
             matchVoList.add(matchVo);
         }
+        //排序
         matchVoList.sort(new Comparator<MatchVo>() {
             @Override
             public int compare(MatchVo o1, MatchVo o2) {
@@ -98,8 +99,11 @@ public class MatchServiceImpl implements MatchService {
         if(matchMapper.selectMatchById(id) == null) {
             throw new MatchException("不存在该比赛");
         }
+        //删除大项和小项运动员之间的关系
         itemMapper.deleteMatchItemAthleteByMatchId(id);
+        //删除该大项对应的所有小项
         itemMapper.deleteItemByMatchId(id);
+        //删除大项
         matchMapper.deleteMatchById(id);
     }
 

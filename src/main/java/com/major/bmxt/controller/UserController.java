@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 用户controller
+ */
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {
@@ -47,6 +50,6 @@ public class UserController {
     @RequestMapping(value = "/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         CookieSessionManage.clearCookieAndSession(request, response);
-        return "redirect:/bmxt/html/login.html";
+        return "redirect:http://39.107.252.145/bmxt/bmxtPage/html/login.html";
     }
 }

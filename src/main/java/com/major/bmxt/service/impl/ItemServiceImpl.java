@@ -112,6 +112,7 @@ public class ItemServiceImpl implements ItemService {
         List<MatchItemAthleteVo> matchItemAthleteVoList = Lists.newArrayList();
         int i = 1;
         Iterator iterator = matchItemAthleteList.iterator();
+        //下面的代码逻辑可能有些复杂，主要就是tb -> vo
         if("CCA".equals(username) || "admin".equals(username)) {
             while(iterator.hasNext()) {
                 TbMatchItemAthlete matchItemAthlete = (TbMatchItemAthlete) iterator.next();
@@ -130,6 +131,7 @@ public class ItemServiceImpl implements ItemService {
                     if(tbMatchItemAthlete.getAthleteMessage().equals(matchItemAthlete.getAthleteMessage())) {
                         continue;
                     }
+                    //看看是否是同一个代表队和同一个船
                     if(matchItemAthlete.getBoatId().intValue() == tbMatchItemAthlete.getBoatId().intValue()
                             && matchItemAthlete.getTeam().equals(tbMatchItemAthlete.getTeam())) {
                         MatchItemAthleteVo matchItemAthleteVo2 = new MatchItemAthleteVo();
@@ -139,6 +141,7 @@ public class ItemServiceImpl implements ItemService {
                         matchItemAthleteList.set(matchItemAthleteList.indexOf(tbMatchItemAthlete), null);
                     }
                 }
+                //查找过的就去除(优化)
                 iterator.remove();
                 i++;
             }

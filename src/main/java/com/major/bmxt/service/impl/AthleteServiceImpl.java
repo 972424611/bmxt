@@ -73,11 +73,13 @@ public class AthleteServiceImpl implements AthleteService {
     @Override
     public PageResult<AthleteVo> getAthletesByCondition(PageQueryCondition pageQueryCondition) {
         BeanValidator.check(pageQueryCondition);
+        //判断条件查询中性别是否为空
         if(StringUtils.isBlank(pageQueryCondition.getGender())) {
             pageQueryCondition.setGender(null);
         } else {
             pageQueryCondition.setGender("男".equals(pageQueryCondition.getGender()) ? "1" : "2");
         }
+        //判断条件查询小项是否为空
         if(StringUtils.isBlank(pageQueryCondition.getEvent())) {
             pageQueryCondition.setEvent(null);
         } else {
@@ -89,6 +91,7 @@ public class AthleteServiceImpl implements AthleteService {
         }
         List<TbAthlete> athleteList = athleteMapper.selectAthletesByCondition(pageQueryCondition);
         List<AthleteVo> athleteVoList = Lists.newLinkedList();
+        //把实体 tb -> vo
         for(TbAthlete athlete : athleteList) {
             AthleteVo athleteVo = new AthleteVo();
             BeanUtils.copyProperties(athlete, athleteVo, "gender");
@@ -96,9 +99,6 @@ public class AthleteServiceImpl implements AthleteService {
             String photoUrl = uploadService.getPictureAddress(team, athlete.getPhotoName());
             athleteVo.setGender(athlete.getGender() == 1 ? "男" : "女");
             if(photoUrl != null) {
-                //photoUrl = "file://" + photoUrl;
-                //String username = RequestHolder.getCurrentUser().getUsername();
-                //username = userMapper.selectUserNameByProvince(athlete.getTeam());
                 photoUrl = this.photoUrl + team + "/" + athlete.getPhotoName();
                 athleteVo.setPhotoUrl(photoUrl);
             }
@@ -118,6 +118,7 @@ public class AthleteServiceImpl implements AthleteService {
         if(team == null) {
             throw new AthleteException("请先登录");
         }
+        //权限判断
         String username = RequestHolder.getCurrentUser().getUsername();
         if("CCA".equals(username) || "admin".equals(username)) {
             team = null;
@@ -125,6 +126,7 @@ public class AthleteServiceImpl implements AthleteService {
         String itemStr = '%' + item.getEvent() + '%';
         List<TbAthlete> athleteList = athleteMapper.selectAthletesByTeamAndEvent(team, itemStr);
         List<String> athleteStrList = Lists.newLinkedList();
+        //如果该小项没有条件
         if(itemCondition == null) {
             for(TbAthlete tbAthlete : athleteList) {
                 String str = tbAthlete.getName();
@@ -138,17 +140,21 @@ public class AthleteServiceImpl implements AthleteService {
             String endTime = itemCondition.getEndTime();
             Integer gender = itemCondition.getGender();
             String date = tbAthlete.getBirthday();
+            //如果有出生日期起始时间限制
             if(startTime != null && date.compareTo(startTime) < 0) {
                 flag = false;
             }
+            //如果有出生日期截止时间限制
             if(endTime != null && date.compareTo(endTime) > 0) {
                 flag = false;
             }
+            //如果有性别限制
             if(gender != null) {
                 if(gender.intValue() != tbAthlete.getGender().intValue()) {
                     flag = false;
                 }
             }
+            //以上条件需要同时满足，才能添加
             if(flag) {
                 String str = tbAthlete.getName() + "-" + tbAthlete.getTeam();
                 athleteStrList.add(str);
@@ -171,7 +177,9 @@ public class AthleteServiceImpl implements AthleteService {
         List<TbMatchItemAthlete> list = athleteMapper.selectMatchItemAthleteByAthleteNumber(number);
         if(list.size() > 0) {
             for(TbMatchItemAthlete matchItemAthlete : list) {
+                //判断该运动员是否报名项目
                 TbMatch tbMatch = matchMapper.selectMatchById(matchItemAthlete.getMatchId());
+                //判断该大项是否正在进行中
                 if(tbMatch.getStatus() == 1) {
                     throw new AthleteException("该运动员已经报名[" + tbMatch.getName() + "]比赛，请先删除该运动员的比赛项目");
                 }
@@ -183,6 +191,7 @@ public class AthleteServiceImpl implements AthleteService {
     @Override
     public PageResult<AthleteVo> getAthletes(PageQuery pageQuery) {
         BeanValidator.check(pageQuery);
+        //权限判断
         TbUser user = RequestHolder.getCurrentUser();
         String team;
         if("admin".equals(user.getUsername()) || "CCA".equals(user.getUsername())) {
@@ -223,6 +232,7 @@ public class AthleteServiceImpl implements AthleteService {
         }
         TbAthlete tbAthlete = athleteMapper.selectAthleteById(athleteParam.getId());
         boolean flag = true;
+        //内容如果有变化的
         if(!tbAthlete.getTeam().equals(athleteParam.getTeam())
                 || !tbAthlete.getName().equals(athleteParam.getName())
                 || !tbAthlete.getBirthday().equals(athleteParam.getBirthday())

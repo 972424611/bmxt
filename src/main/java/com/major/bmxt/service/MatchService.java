@@ -42,9 +42,9 @@ public interface MatchService {
     ResultData verifyMatchName(String name);
 
     /**
+     * 生成报名信息表
      * @param matchId 比赛id
      * @return MatchInfoTableVo
-     * 生成报名信息表
      */
     MatchInfoTableVo createMatchInfoTable(Integer matchId);
 }

@@ -10,6 +10,7 @@ public class HttpInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //允许跨域访问(这样写不安全，但方便调试)
         response.setHeader("Access-Control-Allow-Origin", "*");
         return true;
     }

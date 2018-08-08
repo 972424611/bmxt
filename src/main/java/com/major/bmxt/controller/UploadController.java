@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 上传controller 包括图片、文件上传
+ */
 @Controller
 @RequestMapping(value = "/upload")
 public class UploadController {

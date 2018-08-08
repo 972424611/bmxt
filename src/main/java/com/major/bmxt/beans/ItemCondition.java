@@ -1,11 +1,17 @@
 package com.major.bmxt.beans;
 
+/**
+ * 比赛小项目的条件限制
+ */
 public class ItemCondition {
 
+    /** 出生年月的显示起始时间 */
     private String startTime;
 
+    /** 出生年月的显示终止时间 */
     private String endTime;
 
+    /** 性别限制 */
     private Integer gender;
 
     public String getStartTime() {

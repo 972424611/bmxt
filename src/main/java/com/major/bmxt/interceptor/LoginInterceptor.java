@@ -15,16 +15,18 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
         String uri = httpServletRequest.getRequestURI();
-        if(uri.contains("/bmxt/static") || uri.contains("login.html") || uri.contains("/user/")) {
+        // 不拦截静态文件
+        if(uri.contains("/bmxtPage/static") || uri.contains("login.html") || uri.contains("/user/")) {
             return true;
         }
+        // 判断用户是否已经登录
         TbUser user = (TbUser) CookieSessionManage.getSession(httpServletRequest);
         if(user != null) {
             RequestHolder.add(user);
             RequestHolder.add(httpServletRequest);
             return true;
         }
-        httpServletResponse.sendRedirect("/bmxt/bmxt/html/login.html");
+        httpServletResponse.sendRedirect("http://39.107.252.145/bmxt/bmxtPage/html/login.html");
         return false;
     }
 

@@ -2,6 +2,9 @@ package com.major.bmxt.beans;
 
 import javax.validation.constraints.Min;
 
+/**
+ * 分页查询
+ */
 public class PageQuery {
 
     @Min(value = 1, message = "当前页码不合法")

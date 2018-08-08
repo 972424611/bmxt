@@ -98,22 +98,6 @@
 		DELETE FROM tb_athlete WHERE id = #{athleteId}
 	</delete>
 
-    <select id="countMatchItemAthleteByAthleteNumber" resultType="Integer">
-        SELECT COUNT(*) FROM tb_match_item_athlete WHERE athlete_message LIKE #{number}
-    </select>
-
-	<select id="selectAthleteMaxIdByTeam" resultType="Integer">
-		SELECT MAX(id) FROM tb_athlete WHERE team = #{team}
-	</select>
-
-	<select id="selectAllAthlete" resultType="com.major.bmxt.model.TbAthlete">
-	    SELECT * FROM tb_athlete
-	</select>
-
-	<select id="countAllAthlete" resultType="Integer">
-		SELECT COUNT(id) FROM tb_athlete
-	</select>
-
 	<select id="selectMatchItemAthleteByAthleteNumber" resultType="com.major.bmxt.model.TbMatchItemAthlete">
 		SELECT * FROM tb_match_item_athlete WHERE athlete_message LIKE #{number}
 	</select>

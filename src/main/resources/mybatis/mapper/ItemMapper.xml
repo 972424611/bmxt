@@ -42,10 +42,6 @@
         </if>
     </delete>
 
-    <select id="selectItemByName" resultType="com.major.bmxt.model.TbItem">
-        SELECT * FROM tb_item WHERE name = #{name}
-    </select>
-
     <update id="updateItemById">
         UPDATE tb_item
         SET name = #{tbItem.name}, number = #{tbItem.number}, conditions = #{tbItem.conditions},

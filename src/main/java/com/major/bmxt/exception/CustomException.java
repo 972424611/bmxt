@@ -3,6 +3,9 @@ package com.major.bmxt.exception;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+/**
+ * 异常处理
+ */
 public class CustomException extends RuntimeException {
 
     public CustomException() {

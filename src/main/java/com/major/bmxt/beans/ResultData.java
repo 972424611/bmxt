@@ -3,6 +3,9 @@ package com.major.bmxt.beans;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 返回给前端的数据格式
+ */
 public class ResultData {
 
     private boolean ret;

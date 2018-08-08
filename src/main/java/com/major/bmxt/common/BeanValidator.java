@@ -12,6 +12,11 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.*;
 
+/**
+ * 属性检测类，例如PageQuery类中的这个属性
+ * @Min(value = 1, message = "当前页码不合法")
+ * private int pageNo = 1;
+ */
 public class BeanValidator {
 
     private static ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();

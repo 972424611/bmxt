@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.transform.Result;
 import java.util.List;
 
+/**
+ * 运动员controller
+ */
 @Controller
 @RequestMapping(value = "/athlete")
 public class AthleteController {

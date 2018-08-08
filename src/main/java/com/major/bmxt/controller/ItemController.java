@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+/**
+ * 比赛小项controller
+ */
 @Controller
 @RequestMapping(value = "/item")
 public class ItemController {

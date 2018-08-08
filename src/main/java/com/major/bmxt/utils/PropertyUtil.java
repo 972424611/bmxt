@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
+ * 读取.properties信息
  * @author aekc
  */
 public class PropertyUtil {
