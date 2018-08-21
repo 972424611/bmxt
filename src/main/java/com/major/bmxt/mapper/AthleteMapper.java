@@ -78,4 +78,12 @@ public interface AthleteMapper {
      * @return List<TbMatchItemAthlete>
      */
     List<TbMatchItemAthlete> selectMatchItemAthleteByAthleteNumber(String number);
+
+    /**
+     * 获取运动员通过名称和代表队。这样做的目是查询尽量避免人员重复。但这样做不好，以后要换成用身份证查询。
+     * @param name 运动员名称
+     * @param team 代表队
+     * @return TbAthlete
+     */
+    TbAthlete selectAthleteByNameAndTeam(@Param("name") String name, @Param("team") String team);
 }

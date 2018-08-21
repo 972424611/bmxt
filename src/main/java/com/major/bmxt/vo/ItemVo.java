@@ -2,6 +2,9 @@ package com.major.bmxt.vo;
 
 import com.major.bmxt.beans.ItemCondition;
 
+/**
+ * 小项信息界面对应的vo
+ */
 public class ItemVo {
 
     private int id;

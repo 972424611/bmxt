@@ -6,6 +6,7 @@ public class TbMatchItemAthlete {
 
     private Integer itemId;
 
+    //TODO 后期这个属性要改，要用身份证来替代
     private String athleteMessage;
 
     private Integer boatId;

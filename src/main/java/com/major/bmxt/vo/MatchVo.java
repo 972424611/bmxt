@@ -2,6 +2,9 @@ package com.major.bmxt.vo;
 
 import java.util.Date;
 
+/**
+ * 大项信息界面对应的vo
+ */
 public class MatchVo {
 
     private int id;

@@ -62,9 +62,17 @@ public interface MatchMapper {
     int countMatchByName(String name);
 
     /**
-     * 获取大项、小项、运动员通过大项id
+     * 获取大项、小项、运动员通过大项id(管理员调用)
      * @param id 大项id
      * @return List<TbMatchItemAthlete>
      */
     List<TbMatchItemAthlete> selectMatchItemAthleteByMatchId(Integer id);
+
+    /**
+     * 获取大项、小项、运动员通过大项id和省份(非管理员调用)
+     * @param id 大项id
+     * @param team 省份(像广东这样的中文名称)
+     * @return
+     */
+    List<TbMatchItemAthlete> selectMatchItemAthleteByMatchIdAndTeam(@Param("id") Integer id,@Param("team") String team);
 }

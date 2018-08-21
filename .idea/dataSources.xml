@@ -15,20 +15,6 @@
         <property name="yearIsDateType" value="false" />
       </driver-properties>
     </data-source>
-    <data-source source="LOCAL" name="@rm-bp1p625j8640m9ug7uo.mysql.rds.aliyuncs.com" uuid="60e60d52-873b-4012-97b8-bf2b12a01b8a">
-      <driver-ref>mysql</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://rm-bp1p625j8640m9ug7uo.mysql.rds.aliyuncs.com:3306</jdbc-url>
-      <driver-properties>
-        <property name="autoReconnect" value="true" />
-        <property name="zeroDateTimeBehavior" value="convertToNull" />
-        <property name="tinyInt1isBit" value="false" />
-        <property name="characterEncoding" value="utf8" />
-        <property name="characterSetResults" value="utf8" />
-        <property name="yearIsDateType" value="false" />
-      </driver-properties>
-    </data-source>
     <data-source source="LOCAL" name="@rm-2zex6d7d7v0y380o1mo.mysql.rds.aliyuncs.com" uuid="45597e6a-42c3-4100-9d25-5aee0cec6227">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>

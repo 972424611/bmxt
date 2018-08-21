@@ -256,8 +256,7 @@ public class AthleteServiceImpl implements AthleteService {
         String gender = athleteParam.getGender();
         athlete.setGender("男".equals(gender) ? 1 : 2);
         athlete.setUpdateTime(new Date());
-        //TODO 这里以后要改，加入身份证
-        athlete.setNumber(null);
+        athlete.setNumber(athleteParam.getNumber());
         athleteMapper.updateAthleteById(athlete);
     }
 }

@@ -2,6 +2,9 @@ package com.major.bmxt.vo;
 
 import java.util.List;
 
+/**
+ * 输出的表格对应的vo
+ */
 public class MatchInfoTableVo {
 
     private String matchName;
@@ -24,7 +27,21 @@ public class MatchInfoTableVo {
 
         private String athleteName;
 
+        private String birthday;
+
+        private String gender;
+
+        private String event;
+
         private String boatId;
+
+        public String getEvent() {
+            return event;
+        }
+
+        public void setEvent(String event) {
+            this.event = event;
+        }
 
         public String getItemName() {
             return itemName;
@@ -56,6 +73,22 @@ public class MatchInfoTableVo {
 
         public void setBoatId(String boatId) {
             this.boatId = boatId;
+        }
+
+        public String getBirthday() {
+            return birthday;
+        }
+
+        public void setBirthday(String birthday) {
+            this.birthday = birthday;
+        }
+
+        public String getGender() {
+            return gender;
+        }
+
+        public void setGender(String gender) {
+            this.gender = gender;
         }
     }
 

@@ -80,7 +80,7 @@
 //            user.setProvince(entry.getValue());
 //            user.setPassword(password);
 //            user.setPassword(DigestUtils.md5DigestAsHex(password.getBytes()));
-//            //userMapper.insertUser(user);
+//            userMapper.insertUser(user);
 //            user.setPassword(password);
 //            userList.add(user);
 //        }
@@ -92,7 +92,7 @@
 //    @Test
 //    public void test() {
 //        System.out.println("asss-ddd-tttt".substring(0, "asss-ddd-tttt".lastIndexOf("-")));
-//        System.out.println(DigestUtils.md5DigestAsHex("admin".getBytes()));
+//        System.out.println(DigestUtils.md5DigestAsHex("a#nx1Hp0".getBytes()));
 //        //System.out.println("asdf".compareTo(null));
 //        System.out.println(PropertyUtil.getTeamProperty("北京"));
 //    }

@@ -44,4 +44,8 @@
 	<select id="selectMatchItemAthleteByMatchId" resultType="com.major.bmxt.model.TbMatchItemAthlete">
 		SELECT * FROM tb_match_item_athlete WHERE match_id = #{id}
 	</select>
+
+	<select id="selectMatchItemAthleteByMatchIdAndTeam" resultType="com.major.bmxt.model.TbMatchItemAthlete">
+		SELECT * FROM tb_match_item_athlete WHERE match_id = #{id} AND team = #{team}
+	</select>
 </mapper>

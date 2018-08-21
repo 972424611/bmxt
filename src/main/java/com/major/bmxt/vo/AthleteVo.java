@@ -1,5 +1,8 @@
 package com.major.bmxt.vo;
 
+/**
+ * 运动员信息界面
+ */
 public class AthleteVo {
 
     private int id;
@@ -15,6 +18,8 @@ public class AthleteVo {
     private String birthday;
 
     private String photoUrl;
+
+    private String number;
 
     public String getPhotoUrl() {
         return photoUrl;
@@ -72,6 +77,14 @@ public class AthleteVo {
         this.birthday = birthday;
     }
 
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
     @Override
     public String toString() {
         return "AthleteVo{" +
@@ -82,6 +95,7 @@ public class AthleteVo {
                 ", event='" + event + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", photoUrl='" + photoUrl + '\'' +
+                ", number='" + number + '\'' +
                 '}';
     }
 }

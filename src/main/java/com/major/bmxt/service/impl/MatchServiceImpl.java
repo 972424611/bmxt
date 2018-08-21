@@ -5,15 +5,15 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 import com.major.bmxt.beans.ResultData;
 import com.major.bmxt.common.PdfDeal;
+import com.major.bmxt.common.RequestHolder;
 import com.major.bmxt.exception.MatchException;
+import com.major.bmxt.mapper.AthleteMapper;
 import com.major.bmxt.mapper.ItemMapper;
-import com.major.bmxt.model.TbItem;
-import com.major.bmxt.model.TbMatchItemAthlete;
+import com.major.bmxt.model.*;
 import com.major.bmxt.param.UploadFileParam;
 import com.major.bmxt.vo.MatchInfoTableVo;
 import com.major.bmxt.vo.MatchVo;
 import com.major.bmxt.mapper.MatchMapper;
-import com.major.bmxt.model.TbMatch;
 import com.major.bmxt.service.MatchService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -31,12 +31,15 @@ public class MatchServiceImpl implements MatchService {
 
     private final MatchMapper matchMapper;
 
+    private final AthleteMapper athleteMapper;
+
     private final ItemMapper itemMapper;
 
     @Autowired
-    public MatchServiceImpl(MatchMapper matchMapper, ItemMapper itemMapper) {
+    public MatchServiceImpl(MatchMapper matchMapper, ItemMapper itemMapper, AthleteMapper athleteMapper) {
         this.matchMapper = matchMapper;
         this.itemMapper = itemMapper;
+        this.athleteMapper = athleteMapper;
     }
 
     @Override
@@ -121,11 +124,18 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public MatchInfoTableVo createMatchInfoTable(Integer matchId) {
+        TbUser user = RequestHolder.getCurrentUser();
         TbMatch match = matchMapper.selectMatchById(matchId);
         if(match == null) {
             throw new MatchException("不存在该比赛");
         }
-        List<TbMatchItemAthlete> list = matchMapper.selectMatchItemAthleteByMatchId(matchId);
+        List<TbMatchItemAthlete> list;
+        //如果是管理员
+        if("admin".equals(user.getUsername()) || "CCA".equals(user.getUsername())) {
+            list = matchMapper.selectMatchItemAthleteByMatchId(matchId);
+        } else {
+            list = matchMapper.selectMatchItemAthleteByMatchIdAndTeam(matchId, user.getProvince());
+        }
         List<String> athleteList = new ArrayList<>();
         MatchInfoTableVo matchInfoTableVo = new MatchInfoTableVo();
         List<MatchInfoTableVo.ItemInfo> itemInfoList = new ArrayList<>();
@@ -135,15 +145,28 @@ public class MatchServiceImpl implements MatchService {
             athleteList.add(list.get(i).getAthleteMessage());
             TbMatchItemAthlete matchItemAthlete = list.get(i);
             TbItem item = itemMapper.selectItemById(matchItemAthlete.getItemId());
-            if(i==0 || list.get(i - 1).getItemId().intValue() != item.getId().intValue()) {
+            String athleteName = matchItemAthlete.getAthleteMessage().split("-")[0];
+            String team = matchItemAthlete.getAthleteMessage().split("-")[1];
+            TbAthlete athlete = athleteMapper.selectAthleteByNameAndTeam(athleteName, team);
+            if(i == 0 || list.get(i - 1).getItemId().intValue() != item.getId().intValue()) {
                 itemInfo.setItemName(item.getName());
                 k++;
             } else {
                 itemInfo.setItemName(null);
             }
             itemInfo.setTeam(matchItemAthlete.getTeam());
-            itemInfo.setAthleteName(matchItemAthlete.getAthleteMessage());
+            itemInfo.setAthleteName(athleteName);
             itemInfo.setBoatId(String.valueOf(matchItemAthlete.getBoatId()));
+            itemInfo.setGender(athlete.getGender() == 1 ? "男" : "女");
+            itemInfo.setBirthday(athlete.getBirthday());
+            String event = athlete.getEvent();
+            if(event.contains("皮艇")) {
+                itemInfo.setEvent("皮艇");
+            } else if(event.contains("划艇")) {
+                itemInfo.setEvent("划艇");
+            } else if(event.contains("激流")) {
+                itemInfo.setEvent("激流");
+            }
             itemInfoList.add(itemInfo);
         }
         Set<String> set = new HashSet<>(athleteList);
